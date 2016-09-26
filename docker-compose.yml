@@ -1,0 +1,25 @@
+database:
+  image: mysql:5.7
+  ports:
+    - "3306:3306"
+  environment:
+    MYSQL_ROOT_PASSWORD: 'password'
+
+nginx:
+  image: nginx
+  ports:
+    - "80:80"
+  volumes:
+    - ./nginx.conf:/etc/nginx/nginx.conf
+  links:
+    - server
+
+server:
+  image: benstraub/highfive:latest
+  command: --reload
+  volumes:
+    - ./server:/app
+  links:
+    - database
+  environment:
+    DATABASE_URL: 'mysql+pymysql://root:password@database/highfive'
