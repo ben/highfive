@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+unset DOCKER_HOST
+
+docker-compose up -d
+bin/rails s
+docker-compose stop
