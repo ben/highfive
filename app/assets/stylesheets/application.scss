@@ -14,17 +14,5 @@
  *= require_self
  */
 
-body {
-  display: flex;
-  flex-direction: column;
-
-  > header {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-  }
-
-  > section {
-    flex-grow: 1;
-  }
-}
+ @import "bootstrap-sprockets";
+ @import "bootstrap";
