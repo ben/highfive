@@ -9,6 +9,15 @@
   </head>
 
   <body>
-    <%= yield %>
+    <header>
+      <span>(logo)</span>
+      <span><%= link_to 'Admin', admin_index_path %></span>
+    </header>
+    <section>
+      <%= yield %>
+    </section>
+    <footer>
+      Copyright <%= Date.today.year %> Ben Straub. All rights reserved.
+    </footer>
   </body>
 </html>
