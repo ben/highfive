@@ -1,8 +1,11 @@
 class SlackController < ApplicationController
-  def admin_login
-    render json: params
+  skip_before_filter :verify_authenticity_token
+  
+  def command
+    render json: 'ok'
   end
 
-  def incoming_event
+  def interact
+    render json: 'ok'
   end
 end
