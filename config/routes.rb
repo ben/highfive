@@ -9,5 +9,10 @@ Rails.application.routes.draw do
     get :login, on: :collection
   end
 
+  resources :superadmin, only: [:index] do
+    get :login, on: :collection
+    post :login_attempt, on: :collection
+  end
+
   post 'slack', to: 'slack#incoming_event'
 end
