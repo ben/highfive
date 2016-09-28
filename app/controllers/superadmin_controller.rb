@@ -9,7 +9,7 @@ class SuperadminController < ApplicationController
 
   def login_attempt
     if params[:password] == (ENV['SUPERADMIN_PASSWORD'] || '')
-      puts '!!! MATCH'
+      session[:superadmin] = true
     end
     redirect_to '/superadmin'
   end
@@ -21,6 +21,6 @@ class SuperadminController < ApplicationController
   end
 
   def logged_in?
-    false
+    session[:superadmin] == true
   end
 end
