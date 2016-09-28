@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   get '/auth/slack/callback', to: 'slack#admin_login'
 
   resources :admin, only: [:index] do
+    get :configuration, on: :collection
     get :login, on: :collection
   end
 

@@ -7,9 +7,17 @@ class AdminController < ApplicationController
   def login
   end
 
+  def configuration
+  end
+
   private
 
   def requires_login
-    redirect_to '/admin/login' unless false
+    redirect_to '/admin/login' unless logged_in?
   end
+
+  def logged_in?
+    false
+  end
+
 end
