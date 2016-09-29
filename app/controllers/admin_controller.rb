@@ -8,10 +8,9 @@ class AdminController < ApplicationController
   end
 
   def slack_callback
-    auth_hash = request.env['omniauth.auth']
-    team_id = auth_hash.team_id
-    token = auth_hash.credentials.token
-    render json: {team: team_id, token: token}
+    session[:team_id] = request.env['omniauth.auth'].team_id
+    flash[:warning] = add_app_message unless session[:team_id]
+    redirect_to '/admin'
   end
 
   def configuration
@@ -27,4 +26,7 @@ class AdminController < ApplicationController
     false
   end
 
+  def add_app_message
+    "I'm having trouble finding your team. Have you <a href=\"#{add_app_url}\">added the app</a>?"
+  end
 end

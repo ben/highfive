@@ -1,5 +1,11 @@
 <h1>Login</h1>
 
+<% flash.each do |name, msg| -%>
+  <div class="alert alert=<%=name%>">
+    <%= h msg %>
+  </div>
+<% end -%>
+
 <a href="/auth/slack">
   <img alt="Sign in with Slack" height="40" width="172"
        src="https://platform.slack-edge.com/img/sign_in_with_slack.png"
