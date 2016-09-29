@@ -1,5 +1,6 @@
 class SlackController < ApplicationController
-  skip_before_filter :verify_authenticity_token
+  skip_before_action :verify_authenticity_token
+  before_action :ssl_check, :verify_slack_token
 
   def command
     # {
@@ -14,11 +15,24 @@ class SlackController < ApplicationController
     #   "text"=>"@ben $50 for stuff",
     #   "response_url"=>"https://hooks.slack.com/commands/T0HAGP0J2/85579917141/ToVvZJbtRCua2FVFjPihSSmf"
     # }
-    team = 
-    render(json: 'ok') if params[:ssl_check]
+    # team = SlackTeam.find_by_team_id params[:team_id]
+
+    render json: {
+      text: "<!channel> <@#{params[:user_id]}> is high-fiving!"
+    }
   end
 
   def interact
-    render(json: 'ok') if params[:ssl_check]
+  end
+
+  private
+
+  def ssl_check
+    head :ok if params[:ssl_check]
+  end
+
+  def verify_slack_token
+    puts "!!! #{params[:token]}"
+    head :unauthorized unless params[:token] == ENV['SLACK_VERIFICATION_TOKEN']
   end
 end
