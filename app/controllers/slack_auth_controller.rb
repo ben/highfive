@@ -8,10 +8,9 @@ class SlackAuthController < ApplicationController
     )
     if resp.key? 'team_id'
       # Return flow from "add application" action; record team ID and token
-      byebug
-      SlackTeam.find_or_create_by(team_id: resp.team_id) do |team|
-        team.access_token = resp.access_token
-      end
+      team = SlackTeam.where(team_id: resp.team_id).first_or_initialize
+      team.access_token = resp.access_token
+      team.save
     elsif resp.key? 'team'
       # Return flow from login action; store user info in session
       session[:user_name] = resp.user.name
