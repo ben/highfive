@@ -6,10 +6,14 @@ class SlackAuthController < ApplicationController
       client_secret: ENV['SLACK_CLIENT_SECRET'],
       code: params[:code]
     )
-    if 'commands'.in? resp.scope
+    if resp.key? 'team_id'
+      # Return flow from "add application" action; record team ID and token
       byebug
-      # TODO: create or find team record from resp.team.id, insert resp.access_token
-    elsif 'identity'.in? resp.scope
+      SlackTeam.find_or_create_by(team_id: resp.team_id) do |team|
+        team.access_token = resp.access_token
+      end
+    elsif resp.key? 'team'
+      # Return flow from login action; store user info in session
       session[:user_name] = resp.user.name
       session[:user_id] = resp.user.id
       session[:team_id] = resp.team.id
