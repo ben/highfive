@@ -2,7 +2,7 @@
 
 <% flash.each do |name, msg| -%>
   <div class="alert alert=<%=name%>">
-    <%= h msg %>
+    <%= raw msg %>
   </div>
 <% end -%>
 
