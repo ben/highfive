@@ -34,6 +34,19 @@ class SlackControllerTest < ActionDispatch::IntegrationTest
       user_id: 'userid',
       text: 'what is this thing'
     }
+    assert_includes [nil, 'ephemeral'], body['response_type']
     assert_includes body['text'], '`/highfive @user for (reason)`'
+  end
+
+  test 'stats command' do
+    ['stats', 'admin'].each do |cmd|
+      post '/slack/command', params: {
+        token: ENV['SLACK_VERIFICATION_TOKEN'],
+        user_id: 'userid',
+        text: 'stats'
+      }
+      assert_includes [nil, 'ephemeral'], body['response_type']
+      assert_includes body['text'], ENV['HOSTNAME']
+    end
   end
 end

@@ -39,6 +39,7 @@ class SlackController < ApplicationController
   end
 
   def parse_command
+    return render(json: link) if /help|stats/.match params[:text]
     m = /(@\w+)\s+for\s+(.*)/.match params[:text]
     return render(json: usage) unless m
     params[:target_user_id] = m[1]
@@ -48,6 +49,12 @@ class SlackController < ApplicationController
   def usage
     {
       text: "Hmm, I couldn't understand that. Try `/highfive @user for (reason)`."
+    }
+  end
+
+  def link
+    {
+      text: "Visit the <#{ENV['HOSTNAME']}/admin|Highfive site> for info on your team's activity."
     }
   end
 
