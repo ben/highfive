@@ -15,6 +15,12 @@ class SuperadminController < ApplicationController
     redirect_to '/superadmin'
   end
 
+  def impersonate
+    team = SlackTeam.find_by_team_id params[:team_id]
+    session[:team_id] = team.team_id
+    redirect_to '/admin'
+  end
+
   private
 
   def requires_login

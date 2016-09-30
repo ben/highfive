@@ -13,7 +13,12 @@
       <td> <%= team.team_id %> </td>
       <td> <em>TODO</em> </td>
       <td>
-        <a href="#">Admin login</a>
+        <%= form_for 'impersonate', url: '/superadmin/impersonate', html: {target: '_blank'} do %>
+          <input type="hidden" name="team_id" value="<%= team.team_id %>">
+          <a class="impersonate" href="#">
+            Admin login
+          </a>
+        <% end %>
       </td>
     </tr>
     <% end %>

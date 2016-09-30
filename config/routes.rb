@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   resources :superadmin, only: [:index] do
     get :login, on: :collection
     post :login_attempt, on: :collection
+    post :impersonate, on: :collection
   end
 
   post '/slack/command', to: 'slack#command'
