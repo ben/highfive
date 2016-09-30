@@ -4,7 +4,7 @@ class SuperadminControllerTest < ActionDispatch::IntegrationTest
   fixtures :slack_teams
 
   setup do
-    post '/superadmin/login_attempt', params: { password: ENV['SUPERADMIN_PASSWORD'] }
+    post '/superadmin/login_attempt', params: { password: ENV['SUPERADMIN_PASSWORD'] || '' }
   end
 
   test 'impersonating' do

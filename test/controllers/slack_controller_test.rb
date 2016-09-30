@@ -46,7 +46,7 @@ class SlackControllerTest < ActionDispatch::IntegrationTest
         text: 'stats'
       }
       assert_includes [nil, 'ephemeral'], body['response_type']
-      assert_includes body['text'], ENV['HOSTNAME']
+      assert_includes body['text'], ENV['HOSTNAME'] || 'www.example.com'
     end
   end
 end
