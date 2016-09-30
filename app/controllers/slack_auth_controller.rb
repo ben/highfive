@@ -13,7 +13,6 @@ class SlackAuthController < ApplicationController
       team.save
     elsif resp.key? :team
       # Return flow from login action; store user info in session
-      session[:user_name] = resp[:user][:name]
       session[:user_id] = resp[:user][:id]
       session[:team_id] = resp[:team][:id]
 

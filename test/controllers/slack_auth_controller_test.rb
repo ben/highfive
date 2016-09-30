@@ -14,7 +14,6 @@ class SlackAuthControllerTest < ActionDispatch::IntegrationTest
 
     get '/slack_auth', params: { code: 123 }
 
-    assert_equal 'user name', session[:user_name]
     assert_equal 'userid', session[:user_id]
     assert_equal 'teamid', session[:team_id]
     assert_not_nil flash[:warning]
