@@ -1,1 +1,21 @@
-<h1>Super admin stuff</h1>
+<h1>Super Admin</h1>
+
+<!-- TODO: filter  -->
+<table class="table table-striped">
+  <thead>
+    <th> Team ID </th>
+    <th> Subdomain </th>
+    <th> Actions </th>
+  </thead>
+  <tbody>
+    <% @teams.each do |team| %>
+    <tr>
+      <td> <%= team.team_id %> </td>
+      <td> <em>TODO</em> </td>
+      <td>
+        <a href="#">Admin login</a>
+      </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
