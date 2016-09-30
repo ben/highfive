@@ -8,7 +8,7 @@ class SlackAuthController < ApplicationController
     )
     if resp.key? :team_id
       # Return flow from "add application" action; record team ID and token
-      team = SlackTeam.where(team_id: resp.team_id).first_or_initialize
+      team = SlackTeam.where(team_id: resp[:team_id]).first_or_initialize
       team.access_token = resp[:access_token]
       team.save
     elsif resp.key? :team
