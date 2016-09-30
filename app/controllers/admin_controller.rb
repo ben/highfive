@@ -1,6 +1,6 @@
 class AdminController < ApplicationController
   before_action :requires_login, except: [:login, :slack_callback]
-  helper_method :user_slack_info
+  helper_method :slack_user_info
 
   def index
   end
@@ -13,8 +13,10 @@ class AdminController < ApplicationController
 
   private
 
-  def user_slack_info
-    @user_slack_info ||= slack_client.users_info(user: session[:user_id]).user
+  def slack_user_info
+    @slack_user_info ||= slack_client.users_info(user: session[:user_id]).user
+  rescue Faraday::ConnectionFailed
+    nil
   end
 
   def requires_login
