@@ -16,8 +16,10 @@ class SlackAuthController < ApplicationController
       session[:user_name] = resp[:user][:name]
       session[:user_id] = resp[:user][:id]
       session[:team_id] = resp[:team][:id]
-    else
-      flash[:warning] = add_app_message
+
+      unless SlackTeam.find_by_team_id(resp[:team][:id])
+        flash[:warning] = add_app_message
+      end
     end
     redirect_to '/admin'
   end

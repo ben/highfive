@@ -17,6 +17,7 @@ class SlackAuthControllerTest < ActionDispatch::IntegrationTest
     assert_equal 'user name', session[:user_name]
     assert_equal 'userid', session[:user_id]
     assert_equal 'teamid', session[:team_id]
+    assert_not_nil flash[:warning]
   end
 
   test 'return from add-app action' do
