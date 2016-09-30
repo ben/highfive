@@ -32,9 +32,8 @@ class SlackControllerTest < ActionDispatch::IntegrationTest
     post '/slack/command', params: {
       token: ENV['SLACK_VERIFICATION_TOKEN'],
       user_id: 'userid',
-      text: '@foo for bar'
+      text: 'what is this thing'
     }
-    assert_nil body['response_type']
     assert_includes body['text'], '`/highfive @user for (reason)`'
   end
 end

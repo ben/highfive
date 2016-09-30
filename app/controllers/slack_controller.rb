@@ -46,7 +46,9 @@ class SlackController < ApplicationController
   end
 
   def usage
-    "Hmm, I couldn't understand that. Try `/highfive @user for (reason)`."
+    {
+      text: "Hmm, I couldn't understand that. Try `/highfive @user for (reason)`."
+    }
   end
 
   def random_gif
