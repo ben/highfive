@@ -21,7 +21,7 @@ module HighfiveService
     private
 
     def slack_users_list
-      @slack_users_list ||= slack_client(team_id: @slack_team.team_id).users_list
+      @slack_users_list ||= slack_client(team_id: @slack_team.team_id).users_list.members
     end
 
     def slack_sender
