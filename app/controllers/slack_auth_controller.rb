@@ -6,20 +6,17 @@ class SlackAuthController < ApplicationController
       client_secret: ENV['SLACK_CLIENT_SECRET'],
       code: params[:code]
     )
-    if resp.key? :team_id
-      # Return flow from "add application" action; record team ID and token
-      team = SlackTeam.where(team_id: resp[:team_id]).first_or_initialize
-      team.access_token = resp[:access_token]
-      team.save
-    elsif resp.key? :team
-      # Return flow from login action; store user info in session
-      session[:user_id] = resp[:user][:id]
-      session[:team_id] = resp[:team][:id]
 
-      unless SlackTeam.find_by_team_id(resp[:team][:id])
-        flash[:warning] = add_app_message
-      end
-    end
+    team_id = resp.try(:team_id) || resp.try(:team).try(:id)
+    user_id = resp.try(:user_id) || resp.try(:user).try(:id)
+
+    team = SlackTeam.where(team_id: team_id).first_or_initialize
+    team.access_token = resp[:access_token]
+    team.save
+
+    session[:user_id] = user_id
+    session[:team_id] = team_id
+
     redirect_to '/admin'
   end
 
