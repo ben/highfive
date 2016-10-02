@@ -18,7 +18,7 @@ class SlackController < ApplicationController
     # }
     # team = SlackTeam.find_by_team_id params[:team_id]
 
-    highfive = HighfiveService::Highfive.new slack_team, params[:user_id], params[:target_user_id], params[:reason]
+    highfive = HighfiveService::Highfive.new slack_team, params[:user_id], params[:target_user_id], params[:reason], params[:amount]
     render json: highfive.message
   end
 
@@ -38,10 +38,11 @@ class SlackController < ApplicationController
 
   def parse_command
     return render(json: link) if /help|stats/.match params[:text]
-    m = /@(\w+)\s+for\s+(.*)/.match params[:text]
+    m = /@(\w+)(?:\s+\$(\S+))?(?:\s+for)?\s+(.*)/.match params[:text]
     return render(json: usage) unless m
     params[:target_user_id] = m[1]
-    params[:reason] = m[2]
+    params[:amount] = m[2]
+    params[:reason] = m[3]
   end
 
   def usage
