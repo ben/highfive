@@ -4,8 +4,7 @@ class SlackAuthControllerTest < ActionDispatch::IntegrationTest
   test 'return from login action' do
     Slack::Web::Client.any_instance.stubs(:oauth_access).returns(
       user: {
-        id: 'userid',
-        name: 'user name'
+        id: 'userid'
       },
       team: {
         id: 'teamid'
@@ -16,11 +15,11 @@ class SlackAuthControllerTest < ActionDispatch::IntegrationTest
 
     assert_equal 'userid', session[:user_id]
     assert_equal 'teamid', session[:team_id]
-    assert_not_nil flash[:warning]
   end
 
   test 'return from add-app action' do
     Slack::Web::Client.any_instance.stubs(:oauth_access).returns(
+      user_id: 'userone',
       team_id: 'teamid',
       access_token: 'token'
     )
@@ -34,6 +33,7 @@ class SlackAuthControllerTest < ActionDispatch::IntegrationTest
   test 'updating team token' do
     SlackTeam.create! team_id: 'teamid', access_token: 'one'
     Slack::Web::Client.any_instance.stubs(:oauth_access).returns(
+      user_id: 'userone',
       team_id: 'teamid',
       access_token: 'two'
     )

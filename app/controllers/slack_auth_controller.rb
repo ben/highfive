@@ -7,8 +7,8 @@ class SlackAuthController < ApplicationController
       code: params[:code]
     )
 
-    team_id = resp.try(:team_id) || resp.try(:team).try(:id)
-    user_id = resp.try(:user_id) || resp.try(:user).try(:id)
+    team_id = resp[:team_id] || resp[:team][:id]
+    user_id = resp[:user_id] || resp[:user][:id]
 
     team = SlackTeam.where(team_id: team_id).first_or_initialize
     team.access_token = resp[:access_token]
