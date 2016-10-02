@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::Base
+  include SlackClient
+
   protect_from_forgery with: :exception
 
   helper_method :add_app_url, :slack_login_url
@@ -18,8 +20,4 @@ class ApplicationController < ActionController::Base
     '&scope=users:read'
   end
 
-  def slack_client
-    team = SlackTeam.find_by_team_id(session[:team_id] || params[:team_id])
-    Slack::Web::Client.new(token: team.access_token)
-  end
 end
