@@ -35,7 +35,7 @@ module HighfiveService
     def success
       {
         response_type: 'in_channel',
-        text: "<!channel> <!#{slack_sender.id}> is high-fiving <!#{slack_recipient.id}> for #{@reason} " \
+        text: "<!channel> <@#{slack_sender.id}> is high-fiving <@#{slack_recipient.id}> for #{@reason} " \
               "<#{random_gif}|:hand:>"
       }
     end

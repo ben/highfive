@@ -7,24 +7,27 @@ require 'webmock/minitest'
 require "minitest/unit"
 require "mocha/mini_test"
 
+require 'hash_dot'
+Hash.use_dot_syntax = true
+
 USERONE = {
   id: 'useroneid',
   team: 'teamone',
   name: 'userone'
-}.to_dot
+}
 
 USERTWO = {
   id: 'usertwoid',
   team: 'teamone',
   name: 'usertwo'
-}.to_dot
+}
 
 def mock_users_list
   Slack::Web::Client
     .any_instance
     .expects(:users_list)
     .at_least(0)
-    .returns([USERONE, USERTWO])
+    .returns({members: [USERONE, USERTWO]})
 end
 
 class ActiveSupport::TestCase

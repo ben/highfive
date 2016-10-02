@@ -42,11 +42,6 @@ group :development, :test do
   gem 'mocha'
 end
 
-group :development, :production do
-  # Don't .env in test
-  gem 'dotenv-rails', :require => 'dotenv/rails-now'
-end
-
 group :development do
   # Access an IRB console on exception pages or by using <%= console %> anywhere in the code.
   gem 'web-console'
@@ -54,6 +49,7 @@ group :development do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
+  gem 'dotenv-rails', :require => 'dotenv/rails-now'
 end
 
 group :test do

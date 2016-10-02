@@ -30,7 +30,7 @@ class SlackControllerTest < ActionDispatch::IntegrationTest
     }
     assert_equal 'in_channel', body['response_type']
     assert_includes body['text'], '<!channel>'
-    assert_includes body['text'], '<!usertwoid>'
+    assert_includes body['text'], '<@usertwoid>'
   end
 
   test 'badly formatted command' do
