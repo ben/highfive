@@ -11,9 +11,10 @@ module HighfiveService
     end
 
     def message
-      case
-      when slack_sender.id == slack_recipient.id; self_rebuke
-      else success
+      if slack_sender.id == slack_recipient.id
+        self_rebuke
+      else
+        success
       end
     end
 

@@ -15,11 +15,10 @@ USERTWO = {
 
 module HighfiveService
   class HighfiveServiceTest < ActiveSupport::TestCase
+    fixtures :slack_teams
+
     setup do
-      Slack::Web::Client
-        .any_instance
-        .expects(:users_list)
-        .returns([USERONE, USERTWO])
+      mock_users_list
     end
 
     def msg(sender, recipient, reason = 'foo bar baz')

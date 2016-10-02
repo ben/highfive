@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   include SlackClient
-  
+
   protect_from_forgery with: :exception
 
   helper_method :add_app_url, :slack_login_url

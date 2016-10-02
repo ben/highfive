@@ -18,10 +18,8 @@ class SlackController < ApplicationController
     # }
     # team = SlackTeam.find_by_team_id params[:team_id]
 
-    render json: {
-      response_type: 'in_channel',
-      text: "<!channel> <@#{params[:user_id]}> is high-fiving <#{params[:target_user_id]}> for #{params[:reason]}! <#{random_gif}|:hand:>"
-    }
+    highfive = HighfiveService::Highfive.new slack_team, params[:user_id], params[:target_user_id], params[:reason]
+    render json: highfive.message
   end
 
   def interact
@@ -40,7 +38,7 @@ class SlackController < ApplicationController
 
   def parse_command
     return render(json: link) if /help|stats/.match params[:text]
-    m = /(@\w+)\s+for\s+(.*)/.match params[:text]
+    m = /@(\w+)\s+for\s+(.*)/.match params[:text]
     return render(json: usage) unless m
     params[:target_user_id] = m[1]
     params[:reason] = m[2]
@@ -56,6 +54,10 @@ class SlackController < ApplicationController
     {
       text: "Visit the <#{ENV['HOSTNAME']}/admin|Highfive site> for info on your team's activity."
     }
+  end
+
+  def slack_team
+    SlackTeam.find_by_team_id params[:team_id]
   end
 
   def random_gif
