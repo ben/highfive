@@ -5,16 +5,21 @@ class AdminController < ApplicationController
   def index
   end
 
-  def login
-  end
-
   def configuration
   end
 
   private
 
-    @slack_user_info ||= slack_client.users_info(user: session[:user_id]).user
   def slack_users_info
+    @slack_user_info ||= slack_client.users_list.members
+  rescue Slack::Web::Api::Error => e
+    puts "!!! slack error #{e}"
+    # Token was probably revoked; clear the DB record and the session, the user will have to auth again
+    SlackTeam.where(team_id: session[:team_id]).destroy_all
+    session.delete :user_id
+    session.delete :team_id
+    flash[:error] = "Looks like we can't access your slack team any longer. Please re-authenticate."
+    redirect_to slack_login_url
   rescue Faraday::ConnectionFailed
     nil
   end
@@ -24,11 +29,10 @@ class AdminController < ApplicationController
   end
 
   def requires_login
-    redirect_to '/admin/login' unless logged_in?
+    redirect_to slack_login_url unless logged_in?
   end
 
   def logged_in?
-    puts session[:team_id]
     session.key? 'team_id'
   end
 end
