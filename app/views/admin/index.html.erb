@@ -1,6 +1,6 @@
 <h1>Admin</h1>
 
-<% unless slack_user_info %>
+<% unless slack_users_info %>
 <div class="alert alert-warning">
   Couldn't connect to Slack for user data, so we'll only be showing a reduced data set for now.
   Try again in a few minutes.
@@ -8,5 +8,5 @@
 <% end %>
 
 <pre>
-  <code><%= JSON.pretty_generate slack_user_info %></code>
+  <code><%= JSON.pretty_generate current_user_info.slice(:name, :real_name, :is_admin) %></code>
 </pre>
