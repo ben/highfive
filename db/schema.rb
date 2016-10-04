@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160929041954) do
+ActiveRecord::Schema.define(version: 20161004041156) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -18,8 +18,11 @@ ActiveRecord::Schema.define(version: 20160929041954) do
   create_table "slack_teams", force: :cascade do |t|
     t.string   "team_id"
     t.string   "access_token"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+    t.string   "tango_customer_identifier"
+    t.string   "tango_account_identifier"
+    t.string   "tango_card_token"
     t.index ["team_id"], name: "index_slack_teams_on_team_id", unique: true, using: :btree
   end
 
