@@ -10,10 +10,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161004041156) do
+ActiveRecord::Schema.define(version: 20161004043946) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "highfive_records", force: :cascade do |t|
+    t.integer  "slack_team_id"
+    t.string   "from"
+    t.string   "to"
+    t.string   "reason"
+    t.string   "currency"
+    t.integer  "amount"
+    t.string   "card_code"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.index ["slack_team_id"], name: "index_highfive_records_on_slack_team_id", using: :btree
+  end
 
   create_table "slack_teams", force: :cascade do |t|
     t.string   "team_id"
@@ -26,4 +39,5 @@ ActiveRecord::Schema.define(version: 20161004041156) do
     t.index ["team_id"], name: "index_slack_teams_on_team_id", unique: true, using: :btree
   end
 
+  add_foreign_key "highfive_records", "slack_teams"
 end
