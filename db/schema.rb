@@ -16,23 +16,16 @@ ActiveRecord::Schema.define(version: 20161004043946) do
   enable_extension "plpgsql"
 
   create_table "highfive_records", force: :cascade do |t|
+    t.integer  "slack_team_id"
     t.string   "from"
     t.string   "to"
     t.string   "reason"
     t.string   "currency"
     t.integer  "amount"
     t.string   "card_code"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "highfives", force: :cascade do |t|
-    t.string  "from"
-    t.string  "to"
-    t.string  "reason"
-    t.string  "currency"
-    t.integer "amount"
-    t.string  "card_code"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.index ["slack_team_id"], name: "index_highfive_records_on_slack_team_id", using: :btree
   end
 
   create_table "slack_teams", force: :cascade do |t|
@@ -46,4 +39,5 @@ ActiveRecord::Schema.define(version: 20161004043946) do
     t.index ["team_id"], name: "index_slack_teams_on_team_id", unique: true, using: :btree
   end
 
+  add_foreign_key "highfive_records", "slack_teams"
 end
