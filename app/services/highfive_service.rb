@@ -8,6 +8,9 @@ module HighfiveService
       @recipient = recipient
       @reason = reason
       @amount = amount
+      if valid?
+        @record = HighfiveRecord.create! from: slack_sender.id, to: slack_recipient.id, reason: @reason
+      end
     end
 
     def message
@@ -16,6 +19,10 @@ module HighfiveService
       else
         success
       end
+    end
+
+    def valid?
+      slack_sender.id != slack_recipient.id
     end
 
     private
