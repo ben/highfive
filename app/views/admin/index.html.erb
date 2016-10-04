@@ -1,4 +1,6 @@
-<h1>Admin</h1>
+<%= render 'tangocard_prompt' %>
+
+<h1>Your Team's Statistics</h1>
 
 <% unless slack_users_info %>
 <div class="alert alert-warning">
@@ -7,6 +9,18 @@
 </div>
 <% end %>
 
-<pre>
-  <code><%= JSON.pretty_generate current_user_info.slice(:name, :real_name, :is_admin) %></code>
-</pre>
+<table class="table table-striped">
+  <thead>
+    <th>Date</th>
+    <th>From</th>
+    <th>To</th>
+    <th>Reason</th>
+    <th>Amount</th>
+    <th>Card code</th>
+  </thead>
+  <tbody>
+    <tr>
+      <td>(todo)</td>
+    </tr>
+  </tbody>
+</table>

@@ -1,11 +1,14 @@
 class AdminController < ApplicationController
   before_action :requires_login, except: [:login, :slack_callback]
-  helper_method :slack_users_info, :current_user_info
+  helper_method :slack_users_info, :current_user_info, :current_team
 
   def index
   end
 
   def configuration
+  end
+
+  def tangocard
   end
 
   private
@@ -34,5 +37,9 @@ class AdminController < ApplicationController
 
   def logged_in?
     session.key? 'team_id'
+  end
+
+  def current_team
+    @current_team ||= SlackTeam.find_by_team_id session[:team_id]
   end
 end
