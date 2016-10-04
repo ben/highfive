@@ -30,7 +30,7 @@
         <td><%= name_fallback record.slack_to %></td>
         <td><%= record.reason %></td>
         <td><%= record.amount || '—' %></td>
-        <td><%= record.card_code || '—' %></td>
+        <td><%= record.card_code ? '<em>REDACTED</em>'.html_safe : '—' %></td>
       </tr>
     <% end %>
   </tbody>
