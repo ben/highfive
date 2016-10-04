@@ -1,6 +1,7 @@
-<%= render 'tangocard_prompt' %>
-
-<h1>Your Team's Statistics</h1>
+<div class="row">
+  <h1 class="col-md-9">Your Team's Statistics</h1>
+  <%= render 'tangocard_prompt' %>
+</div>
 
 <% unless slack_users_info %>
 <div class="alert alert-warning">
