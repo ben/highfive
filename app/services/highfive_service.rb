@@ -9,7 +9,7 @@ module HighfiveService
       @reason = reason
       @amount = amount
       if valid?
-        @record = HighfiveRecord.create! from: slack_sender.id, to: slack_recipient.id, reason: @reason
+        @record = HighfiveRecord.create! slack_team_id: @slack_team.id, from: slack_sender.id, to: slack_recipient.id, reason: @reason
       end
     end
 

@@ -39,7 +39,7 @@ module HighfiveService
 
     test 'highfiving yourself' do
       assert_includes msg('userone', 'userone')[:text], 'clapping'
-      assert_equal 0, HighfiveRecord.count
+      assert_equal 0, HighfiveRecord.where(from: USERONE.id, to: USERONE.id).count
     end
   end
 end
