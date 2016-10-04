@@ -1,5 +1,5 @@
 <% unless current_team.tangocard? %>
-<div class="alert alert-success pull-right">
+<div id="tangoprompt" class="well pull-right">
   Highfive is even better with gift cards.
   <%= link_to 'Configure Tangocard',
     {controller: 'admin', action: 'tangocard'},

@@ -16,6 +16,7 @@
 
  @import "bootstrap-sprockets";
  @import "bootstrap";
+ @import "./bootstrap.min";
 
 body > .container {
   margin-top: 8rem;
