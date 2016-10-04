@@ -3,6 +3,8 @@ class AdminController < ApplicationController
   helper_method :slack_users_info, :current_user_info, :current_team
 
   def index
+    @records = current_team.highfive_records
+    @records.each { |r| r.slack_users_info = slack_users_info }
   end
 
   def configuration

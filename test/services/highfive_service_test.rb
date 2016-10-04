@@ -31,10 +31,15 @@ module HighfiveService
       assert_includes response[:text], USERONE.id
       assert_includes response[:text], USERTWO.id
       assert_includes response[:text], 'foo bar baz'
+      record = HighfiveRecord.last
+      assert_equal record.from, USERONE.id
+      assert_equal record.to, USERTWO.id
+      assert_equal record.reason, 'foo bar baz'
     end
 
     test 'highfiving yourself' do
       assert_includes msg('userone', 'userone')[:text], 'clapping'
+      assert_equal 0, HighfiveRecord.where(from: USERONE.id, to: USERONE.id).count
     end
   end
 end
