@@ -37,6 +37,7 @@ ActiveRecord::Schema.define(version: 20161005011358) do
     t.string   "tango_account_identifier"
     t.string   "tango_card_token"
     t.string   "team_name"
+    t.string   "team_subdomain"
     t.index ["team_id"], name: "index_slack_teams_on_team_id", unique: true, using: :btree
   end
 
