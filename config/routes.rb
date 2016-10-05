@@ -7,7 +7,11 @@ Rails.application.routes.draw do
   resources :admin, only: :index do
     get :configuration, on: :collection
     get :login, on: :collection
-    get :tangocard, on: :collection
+    collection do
+      resources :tangocard, only: :index do
+        post :enable, on: :collection
+      end
+    end
   end
 
   resources :superadmin, only: [:index] do

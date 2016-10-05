@@ -9,10 +9,4 @@ class AdminController < ApplicationController
 
   def configuration
   end
-
-  def tangocard
-  end
-
-  private
-
 end
