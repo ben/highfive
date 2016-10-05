@@ -8,5 +8,29 @@ class TangocardController < ApplicationController
   end
 
   def enable
+    tango_client = Tangocard::Client.new
+    customer_identifier = to_identifier(current_team.team_subdomain)
+    account_identifier = to_identifier(current_user_info[:real_name])
+
+    tango_client.create_customer customer_identifier
+
+    tango_client.create_account(
+      customerIdentifier: customer_identifier,
+      accountIdentifier: account_identifier,
+      email: current_user_info[:email],
+      name: current_user_info[:real_name]
+    )
+
+    current_team.update!(
+      tango_customer_identifier: customer_identifier,
+      tango_account_identifier: account_identifier
+    )
+    redirect_to tangocard_index_path
+  end
+
+  private
+
+  def to_identifier(str)
+    str.parameterize.gsub(/[^a-zA-Z0-9]/, '')
   end
 end
