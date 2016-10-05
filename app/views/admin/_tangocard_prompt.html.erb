@@ -3,8 +3,8 @@
   <p>
     Highfive is even better with gift cards.
   </p>
-  <%= link_to 'Configure Tangocard',
-    {controller: 'tangocard', action: 'index'},
-    {class: 'btn btn-success btn-block'} %>
+  <%= button_to 'Enable Tangocard',
+    { controller: 'tangocard', action: 'enable' },
+    { class: 'btn btn-success btn-block' } %>
 </div>
 <% end %>

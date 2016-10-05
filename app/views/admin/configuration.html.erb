@@ -2,3 +2,14 @@
   <h1 class="col-md-9">Configuration for <%= current_team.team_name %></h1>
   <%= render 'tangocard_prompt' %>
 </div>
+
+<% if current_team.tangocard? %>
+  <h2>Tangocard Settings</h2>
+  (TODO)
+<% else %>
+  <p>
+    There's nothing to configure here until you enable Tangocard integration.
+    See the big green button that says "Enable Tangocard"?
+    That's the one, click it.
+  </p>
+<% end %>

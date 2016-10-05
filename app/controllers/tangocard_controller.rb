@@ -4,9 +4,6 @@ class TangocardController < ApplicationController
 
   before_action :requires_login
 
-  def index
-  end
-
   def enable
     tango_client = Tangocard::Client.new
     customer_identifier = to_identifier(current_team.team_subdomain)
@@ -25,7 +22,7 @@ class TangocardController < ApplicationController
       tango_customer_identifier: customer_identifier,
       tango_account_identifier: account_identifier
     )
-    redirect_to tangocard_index_path
+    redirect_to controller: :admin, action: :configuration
   end
 
   private
