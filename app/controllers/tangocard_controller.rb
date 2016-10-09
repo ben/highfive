@@ -5,7 +5,6 @@ class TangocardController < ApplicationController
   before_action :requires_login
 
   def enable
-    tango_client = Tangocard::Client.new
     customer_identifier = to_identifier(current_team.team_subdomain)
     account_identifier = to_identifier(current_user_info[:real_name])
 
@@ -32,11 +31,25 @@ class TangocardController < ApplicationController
                               :city, :country, :emailAddress, :postalCode, :state)
     cc_params[:ipAddress] = request.ip
     cc = CreditCard.new(cc_params)
-    cc.validate!
+    if cc.valid?
+      resp = tango_client.create_card cc.to_tango_payload
+      if resp['errors']
+        flash[:tango_errors] = resp['errors']
+      else
+        current_team.tango_card_token = resp['token']
+        current_team.save!
+      end
+    else
+      flash[:validation_errors] = cc.errors
+    end
     redirect_to controller: :admin, action: :configuration
   end
 
   private
+
+  def tango_client
+    Tangocard::Client.new
+  end
 
   def to_identifier(str)
     str.parameterize.gsub(/[^a-zA-Z0-9]/, '')
