@@ -3,6 +3,26 @@
   <%= render 'tangocard_prompt' %>
 </div>
 
+<% if flash[:validation_errors] %>
+  <div class="alert alert-danger">
+    We can't handle your submission:
+    <ul>
+    <% (flash[:validation_errors] || []).each do |validation| %>
+        <li><%= validation[0] %>: <%= validation[1].join(', ') %></li>
+    <% end %>
+    </ul>
+  </div>
+<% end %>
+<% if flash[:tango_errors] %>
+  <div class="alert alert-danger">
+    We can't handle your submission:
+    <ul>
+    <% flash[:tango_errors].each do |err| %>
+      <li><%= err['path'] %> &mdash; <%= err['message'] %></li>
+    <% end %>
+  </div>
+<% end %>
+
 <% if current_team.tangocard? %>
   <h2>Tangocard Settings</h2>
 
