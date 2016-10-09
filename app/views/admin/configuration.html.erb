@@ -1,3 +1,38 @@
-<%= render 'tangocard_prompt' %>
+<div class="row">
+  <h1 class="col-md-9">Configuration for <%= current_team.team_name %></h1>
+  <%= render 'tangocard_prompt' %>
+</div>
 
-<h1>Configuration</h1>
+<% if current_team.tangocard? %>
+  <h2>Tangocard Settings</h2>
+
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a role="button" data-toggle="collapse" href="#cc_panel">
+          Credit Card Information
+        </a>
+      </h4>
+    </div>
+    <div id="cc_panel" class="panel-collapse collapse <%= 'in' unless current_team.tango_card_token %>">
+      <div class="panel-body">
+        <%= form_for 'credit_card', url: credit_card_tangocard_index_path do |form| %>
+
+        <% end %>
+
+        <div class="small text-danger">
+          <strong>NOTE:</strong> Highfive does not store credit card or financial information directly.
+          All of the information in this form is sent to Tangocard, and we store only a token that we can use to buy cards on your behalf through their service.
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+<% else %>
+  <p>
+    There's nothing to configure here until you enable Tangocard integration.
+    See the big green button that says "Enable Tangocard"?
+    That's the one, click it.
+  </p>
+<% end %>

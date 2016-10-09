@@ -5,9 +5,18 @@ Rails.application.routes.draw do
   resources :slack_auth, only: :index
 
   resources :admin, only: :index do
-    get :configuration, on: :collection
-    get :login, on: :collection
-    get :tangocard, on: :collection
+    collection do
+      get :configuration
+      get :login
+      resources :tangocard, only: :index do
+        collection do
+          post :enable
+          post :credit_card
+        end
+      end
+    end
+    collection do
+    end
   end
 
   resources :superadmin, only: [:index] do

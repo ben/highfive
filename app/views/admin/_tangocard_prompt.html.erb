@@ -1,8 +1,10 @@
 <% unless current_team.tangocard? %>
-<div id="tangoprompt" class="well pull-right">
-  Highfive is even better with gift cards.
-  <%= link_to 'Configure Tangocard',
-    {controller: 'admin', action: 'tangocard'},
-    {class: 'btn btn-success'} %>
+<div class="well col-md-3">
+  <p>
+    Highfive is even better with gift cards.
+  </p>
+  <%= button_to 'Enable Tangocard',
+    { controller: 'tangocard', action: 'enable' },
+    { class: 'btn btn-success btn-block' } %>
 </div>
 <% end %>

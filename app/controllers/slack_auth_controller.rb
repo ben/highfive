@@ -7,11 +7,15 @@ class SlackAuthController < ApplicationController
       code: params[:code]
     )
 
-    team_id = resp[:team_id] || resp[:team][:id]
     user_id = resp[:user_id] || resp[:user][:id]
-
+    team_id = resp[:team_id] || resp[:team][:id]
     team = SlackTeam.where(team_id: team_id).first_or_initialize
     team.access_token = resp[:access_token]
+
+    resp = Slack::Web::Client.new(token: team.access_token).team_info
+    team.team_subdomain = resp.team.domain
+    team.team_name = resp.team.name
+
     team.save
 
     session[:user_id] = user_id

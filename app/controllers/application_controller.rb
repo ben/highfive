@@ -18,7 +18,7 @@ class ApplicationController < ActionController::Base
     'https://slack.com/oauth/authorize' \
     "?client_id=#{ENV['SLACK_CLIENT_ID']}" \
     "&redirect_uri=#{ENV['HOSTNAME']}#{url_for '/slack_auth'}" \
-    '&scope=users:read'
+    '&scope=users:read,team:read'
   end
 
   private

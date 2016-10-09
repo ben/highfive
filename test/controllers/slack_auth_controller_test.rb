@@ -1,8 +1,24 @@
 require 'test_helper'
 
 class SlackAuthControllerTest < ActionDispatch::IntegrationTest
+  def stub_slack_api(oauth_access_return = nil)
+    oauth_access_return ||= {
+      user_id: 'userone',
+      team_id: 'teamid',
+      access_token: 'token'
+    }
+    Slack::Web::Client.any_instance.stubs(:oauth_access).returns(oauth_access_return)
+    Slack::Web::Client.any_instance.stubs(:team_info).returns(
+      team: {
+        name: 'team name',
+        domain: 'teamdomain'
+      }
+    )
+
+  end
+
   test 'return from login action' do
-    Slack::Web::Client.any_instance.stubs(:oauth_access).returns(
+    stub_slack_api(
       user: {
         id: 'userid'
       },
@@ -18,11 +34,7 @@ class SlackAuthControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'return from add-app action' do
-    Slack::Web::Client.any_instance.stubs(:oauth_access).returns(
-      user_id: 'userone',
-      team_id: 'teamid',
-      access_token: 'token'
-    )
+    stub_slack_api
 
     get '/slack_auth', params: { code: 123 }
 
@@ -32,15 +44,11 @@ class SlackAuthControllerTest < ActionDispatch::IntegrationTest
 
   test 'updating team token' do
     SlackTeam.create! team_id: 'teamid', access_token: 'one'
-    Slack::Web::Client.any_instance.stubs(:oauth_access).returns(
-      user_id: 'userone',
-      team_id: 'teamid',
-      access_token: 'two'
-    )
+    stub_slack_api
 
     get '/slack_auth', params: { code: 123 }
 
     team = SlackTeam.find_by_team_id 'teamid'
-    assert_equal 'two', team.access_token
+    assert_equal 'token', team.access_token
   end
 end
