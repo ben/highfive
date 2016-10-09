@@ -12,7 +12,7 @@
 
 <% if @tango_account %>
 <p>
-  <strong>Tango account balance:</strong> $<%= @tango_account[:currentBalance] %>
+  Current Tangocard account balance: <strong>$<%= format '%.2f', @tango_account['currentBalance']/100 %></strong>
 </p>
 <% end %>
 
