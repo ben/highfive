@@ -1,6 +1,6 @@
 class AdminController < ApplicationController
   include AdminTeam
-  before_action :requires_login, except: [:login, :slack_callback]
+  before_action :requires_login, :fetch_tangocard_info
 
   def index
     @records = current_team.highfive_records.order(created_at: 'DESC')
@@ -8,5 +8,12 @@ class AdminController < ApplicationController
   end
 
   def configuration
+  end
+
+  private
+
+  def fetch_tangocard_info
+    @tango_account = Tangocard::Client.new.get_account(current_team.tango_account_identifier) \
+      if current_team.tango_account_identifier.present?
   end
 end

@@ -10,6 +10,12 @@
 </div>
 <% end %>
 
+<% if @tango_account %>
+<p>
+  <strong>Tango account balance:</strong> $<%= @tango_account[:currentBalance] %>
+</p>
+<% end %>
+
 <div class="clear-right table-responsive">
   <table class="table table-striped">
     <thead>
