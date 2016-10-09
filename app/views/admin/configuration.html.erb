@@ -16,8 +16,32 @@
     </div>
     <div id="cc_panel" class="panel-collapse collapse <%= 'in' unless current_team.tango_card_token %>">
       <div class="panel-body">
-        <%= form_for 'credit_card', url: credit_card_tangocard_index_path do |form| %>
+        <%= bootstrap_form_tag url: credit_card_tangocard_index_path, layout: :horizontal, label_col: "col-sm-3", control_col: "col-sm-9" do |form| %>
+          <%= form.hidden_field :customerIdentifier, value: current_team.tango_customer_identifier %>
+          <%= form.hidden_field :accountIdentifier, value: current_team.tango_account_identifier %>
+          <%= form.hidden_field :label, value: 'card' %>
 
+          <div class="well">
+            <h3>Card</h3>
+            <%= form.text_field :number, label: 'Card Number', placeholder: 'No dashes or spaces please' %>
+            <%= form.text_field :expiration, placeholder: 'YYYY-MM' %>
+            <%= form.text_field :verificationNumber, label: 'CVV', placeholder: '3 or 4 digits' %>
+          </div>
+
+          <div class="well">
+            <h3>Billing</h3>
+            <%= form.text_field :firstName, label: 'First Name', value: @first %>
+            <%= form.text_field :lastName, label: 'Last Name', value: @last %>
+            <%= form.email_field :emailAddress, label: 'Email', value: @email %>
+            <%= form.text_field :addressLine1, label: 'Street Address' %>
+            <%= form.text_field :addressLine2, hide_label: true %>
+            <%= form.text_field :city %>
+            <%= form.text_field :state %>
+            <%= form.text_field :postalCode, label: 'Postal Code' %>
+            <%= form.text_field :country %>
+          </div>
+
+          <%= form.submit class: 'col-sm-offset-3 col-sm-9 btn btn-success' %>
         <% end %>
 
         <div class="small text-danger">

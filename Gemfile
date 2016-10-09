@@ -31,6 +31,7 @@ gem 'jbuilder', '~> 2.5'
 # gem 'capistrano-rails', group: :development
 
 gem 'bootstrap-sass', '~> 3.3.6'
+gem 'bootstrap_form'
 gem 'slack-ruby-client'
 gem 'redis-rails'
 gem 'momentjs-rails'

@@ -8,6 +8,8 @@ class AdminController < ApplicationController
   end
 
   def configuration
+    @first, @last = current_user_info.real_name.split(' ')
+    @email = current_user_info.profile.email
   end
 
   private

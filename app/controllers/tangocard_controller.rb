@@ -26,7 +26,14 @@ class TangocardController < ApplicationController
   end
 
   def credit_card
-
+    cc_params = params.permit(:accountIdentifier, :customerIdentifier, :label,
+                              :number, :expiration, :verificationNumber,
+                              :firstName, :lastName, :addressLine1, :addressLine2,
+                              :city, :country, :emailAddress, :postalCode, :state)
+    cc_params[:ipAddress] = request.ip
+    cc = CreditCard.new(cc_params)
+    cc.validate!
+    redirect_to controller: :admin, action: :configuration
   end
 
   private

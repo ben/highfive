@@ -39,4 +39,30 @@ module Tangocard
       JSON.parse resp.body
     end
   end
+
+  def self.default_cc_payload(user_info = nil)
+    first, last = user_info.try(:real_name, '').split(' ')
+    {
+      accountIdentifier: '',
+      customerIdentifier: '',
+      ipAddress: '',
+      label: '',
+      creditCard: {
+        number: '',
+        expiration: '',
+        verificationNumber: ''
+      },
+      billingAddress: {
+        firstName: first.presence || '',
+        lastName: last.presence || '',
+        addressLine1: '',
+        addressLine2: '',
+        city: '',
+        country: '',
+        emailAddress: user_info.try(:emailAddress) || '',
+        postalCode: '',
+        state: ''
+      }
+    }
+  end
 end
