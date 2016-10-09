@@ -1,0 +1,2 @@
+git push prod master
+heroku run -a bs-highfive-production rake db:migrate
