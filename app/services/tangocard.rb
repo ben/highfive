@@ -3,6 +3,7 @@ module Tangocard
     def initialize
       @conn = Faraday.new ENV['TANGOCARD_ROOTURL'] do |c|
         c.use Faraday::Response::RaiseError
+        c.adapter Faraday.default_adapter
       end
       @conn.basic_auth ENV['TANGOCARD_PLATFORM_NAME'], ENV['TANGOCARD_PLATFORM_KEY']
     end
@@ -30,6 +31,11 @@ module Tangocard
           displayName: name
         }.to_json
       end
+      JSON.parse resp.body
+    end
+
+    def get_account(identifier)
+      resp = @conn.get "accounts/#{identifier}"
       JSON.parse resp.body
     end
   end
