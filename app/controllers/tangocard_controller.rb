@@ -25,6 +25,10 @@ class TangocardController < ApplicationController
     redirect_to controller: :admin, action: :configuration
   end
 
+  def credit_card
+
+  end
+
   private
 
   def to_identifier(str)
