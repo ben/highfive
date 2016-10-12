@@ -15,7 +15,9 @@ class AdminController < ApplicationController
   private
 
   def fetch_tangocard_info
-    @tango_account = Tangocard::Client.new.get_account(current_team.tango_account_identifier) \
+    @tango_account ||= Tangocard::Client.new.get_account(current_team.tango_account_identifier) \
       if current_team.tango_account_identifier.present?
+  rescue Faraday::ConnectionFailed
+    {}
   end
 end

@@ -7,20 +7,21 @@ module AdminTeam
 
   def slack_users_info
     @slack_user_info ||= slack_client.users_list.members
-  rescue Slack::Web::Api::Error => e
-    puts "!!! slack error #{e}"
-    # Token was probably revoked; clear the DB record and the session, the user will have to auth again
-    SlackTeam.where(team_id: session[:team_id]).destroy_all
+  rescue Slack::Web::Api::Error
+    # Token was probably revoked; clear the DB record and the session, the user
+    # will have to auth again
+    SlackTeam.where(team_id: session[:team_id]).update! access_token: nil,
+                                                        team_name: nil,
+                                                        team_subdomain: nil
     session.delete :user_id
     session.delete :team_id
-    flash[:error] = "Looks like we can't access your slack team any longer. Please re-authenticate."
     redirect_to slack_login_url
   rescue Faraday::ConnectionFailed
-    nil
+    [FakeSlack::UserInfo.new('jdoe')]
   end
 
   def current_user_info
-    slack_users_info.find { |u| u.id == session[:user_id] }
+    slack_users_info.find { |u| u.id == session[:user_id] } || FakeSlack::UserInfo.new(session[:user_id])
   end
 
   def current_team
