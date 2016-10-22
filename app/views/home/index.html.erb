@@ -1,19 +1,86 @@
 <div class="jumbotron">
-  <div class="pull-right">
+  <a href="<%= add_app_url %>" class="pull-right">
+    <img alt="Add to Slack" height="40" width="139"
+         src="https://platform.slack-edge.com/img/add_to_slack.png"
+         srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" />
+  </a>
+  <h1>✋ Highfive</h1>
+  <p>
+    Like something someone did?
+    Give them a high-five, with a gift card attached!
+  </p>
+</div>
+
+<div class="row">
+  <div class="col-md-5 col-md-offset-1">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h4 class="panel-title">How does it work?</h4>
+      </div>
+      <div class="panel-body row">
+        <ol>
+          <li>Type <code>/highfive @person $15 for being awesome</code></li>
+          <li>The highfive bot makes sure everybody knows</li>
+          <li>The recipient of your high-five gets an Amazon gift card in their email!</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-5">
+    <!-- <%= image_tag 'highfive.gif' %> -->
+    <%= video_tag 'highfive.mov', width: '100%', autoplay: true, loop: true %>
+  </div>
+</div>
+
+<hr>
+
+<div class="row">
+
+  <div class="col-md-4 col-md-offset-1">
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <h4 class="panel-title">Why do I want this?</h4>
+      </div>
+      <div class="panel-body">
+        <p>
+          As any seasoned HR professional will tell you, people respond more to the acclaim of their peers than to monetary incentives.
+          When someone congratulates you for an accomplishment, particularly in public, you feel a lot better than if your boss gives you a dinner voucher.
+          Highfive is a low-friction peer-reward system that really works, and makes your team happier.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4 col-md-offset-1">
+    <div class="panel panel-success">
+      <div class="panel-heading">
+        <h4 id="pricing" class="panel-title">How much does it cost?</h4>
+      </div>
+      <div class="panel-body">
+        <p>
+          <strong>It's completely free.</strong>
+        </p>
+        <p>
+          Using the <a href="https://tangocard.com">Tangocard</a> service, we take a small margin whenever you buy a gift card for a member of your team, but this is completely transparent for you.
+          When you spend $25 on a gift card, you get a $25 gift card.
+          No fees, no subscription, and we don't retain any of your financial information.
+        </p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<hr>
+
+<div class="row">
+  <div class="col-md-4 col-md-offset-4 text-center jumbotron">
+    <h4>Get started for free right now.</h4>
     <a href="<%= add_app_url %>">
       <img alt="Add to Slack" height="40" width="139"
            src="https://platform.slack-edge.com/img/add_to_slack.png"
            srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" />
     </a>
   </div>
-  <h1>✋ Highfive</h1>
-  <p>
-    Like something someone did?
-    Give them a high-five!
-    You can even attach gift cards!
-  </p>
 </div>
-
-<p>
-  High-fiving is a great way to tell someone that they did something you like.
-</p>
