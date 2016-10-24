@@ -8,9 +8,6 @@ module HighfiveService
       @recipient = recipient
       @reason = reason
       @amount = amount
-      if valid?
-        @record = HighfiveRecord.create! slack_team_id: @slack_team.id, from: slack_sender.id, to: slack_recipient.id, reason: @reason
-      end
     end
 
     def message
@@ -23,6 +20,13 @@ module HighfiveService
 
     def valid?
       slack_sender.id != slack_recipient.id
+    end
+
+    def commit!
+      if valid?
+        @record = HighfiveRecord.create! slack_team_id: @slack_team.id, from: slack_sender.id, to: slack_recipient.id, reason: @reason
+        GoogleTracker.event category: 'highfive', action: 'sent', label: @slack_team.id, value: 0 # TODO: include dollar amount
+      end
     end
 
     private

@@ -22,7 +22,9 @@ module HighfiveService
     end
 
     def msg(sender, recipient, reason = 'foo bar baz')
-      Highfive.new(slack_teams(:one), sender, recipient, reason).message
+      @highfive = Highfive.new(slack_teams(:one), sender, recipient, reason)
+      @highfive.commit!
+      @highfive.message
     end
 
     test 'success' do

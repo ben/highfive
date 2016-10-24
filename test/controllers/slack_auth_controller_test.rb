@@ -5,7 +5,8 @@ class SlackAuthControllerTest < ActionDispatch::IntegrationTest
     oauth_access_return ||= {
       user_id: 'userone',
       team_id: 'teamid',
-      access_token: 'token'
+      access_token: 'token',
+      scope: 'a,b,c'
     }
     Slack::Web::Client.any_instance.stubs(:oauth_access).returns(oauth_access_return)
     Slack::Web::Client.any_instance.stubs(:team_info).returns(
