@@ -12,6 +12,8 @@ class SlackAuthController < ApplicationController
     team = SlackTeam.where(team_id: team_id).first_or_initialize
     team.access_token = resp[:access_token]
 
+    GoogleTracker.event category: 'slack', event: 'auth', label: resp.scope
+
     resp = Slack::Web::Client.new(token: team.access_token).team_info
     team.team_subdomain = resp.team.domain
     team.team_name = resp.team.name

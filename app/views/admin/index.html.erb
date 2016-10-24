@@ -3,6 +3,8 @@
   <%= render 'tangocard_prompt' %>
 </div>
 
+<!-- TODO: message if authed for admin but app not configured -->
+
 <% unless slack_users_info %>
 <div class="alert alert-warning">
   Couldn't connect to Slack for user data, so we'll only be showing a reduced data set for now.
