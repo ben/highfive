@@ -19,6 +19,7 @@ class SlackController < ApplicationController
     # team = SlackTeam.find_by_team_id params[:team_id]
 
     highfive = HighfiveService::Highfive.new slack_team, params[:user_id], params[:target_user_id], params[:reason], params[:amount]
+    highfive.commit!
     render json: highfive.message
   end
 
