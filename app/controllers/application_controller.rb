@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
   def add_app_url
     'https://slack.com/oauth/authorize' \
     "?client_id=#{ENV['SLACK_CLIENT_ID']}" \
-    '&scope=commands,users:read'
+    '&scope=commands,users:read,team:read'
   end
 
   def slack_login_url

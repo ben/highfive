@@ -10,9 +10,9 @@ module AdminTeam
   rescue Slack::Web::Api::Error
     # Token was probably revoked; clear the DB record and the session, the user
     # will have to auth again
-    SlackTeam.where(team_id: session[:team_id]).update! access_token: nil,
-                                                        team_name: nil,
-                                                        team_subdomain: nil
+    SlackTeam.where(team_id: session[:team_id]).update access_token: nil,
+                                                       team_name: nil,
+                                                       team_subdomain: nil
     session.delete :user_id
     session.delete :team_id
     redirect_to slack_login_url
