@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161005011358) do
+ActiveRecord::Schema.define(version: 20161026011345) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -38,6 +38,10 @@ ActiveRecord::Schema.define(version: 20161005011358) do
     t.string   "tango_card_token"
     t.string   "team_name"
     t.string   "team_subdomain"
+    t.integer  "award_limit"
+    t.integer  "daily_limit"
+    t.integer  "double_rate"
+    t.integer  "boomerang_rate"
     t.index ["team_id"], name: "index_slack_teams_on_team_id", unique: true, using: :btree
   end
 
