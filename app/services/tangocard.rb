@@ -25,7 +25,7 @@ module Tangocard
           accountIdentifier: accountIdentifier,
           contactEmail: email,
           currencyCode: 'USD',
-          displayName: name
+          displayName: "#{customerIdentifier} - #{name}"
         }.to_json
       end
       JSON.parse resp.body

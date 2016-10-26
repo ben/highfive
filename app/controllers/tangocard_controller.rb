@@ -5,9 +5,6 @@ class TangocardController < ApplicationController
   before_action :requires_login
 
   def enable
-    customer_identifier = to_identifier(current_team.team_subdomain)
-    account_identifier = to_identifier(current_user_info[:real_name])
-
     tango_client.create_customer customer_identifier
 
     tango_client.create_account(
@@ -49,6 +46,14 @@ class TangocardController < ApplicationController
 
   def tango_client
     Tangocard::Client.new
+  end
+
+  def customer_identifier
+    to_identifier(current_team.team_subdomain)
+  end
+
+  def account_identifier
+    to_identifier("#{customer_identifier}-#{current_user_info[:real_name]}")
   end
 
   def to_identifier(str)
