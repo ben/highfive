@@ -74,6 +74,21 @@
     </div>
   </div>
 
+  <% if current_team.tango_card_token %>
+  <div class="panel panel-success">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        Gift Card Settings
+      </h4>
+    </div>
+    <div class="panel-body">
+      <%= bootstrap_form_for(current_team, url: settings_tangocard_path) do |form| %>
+        <%= form.text_field :team_name %>
+      <% end %>
+    </div>
+  </div>
+  <% end %>
+
 <% else %>
   <p>
     There's nothing to configure here until you enable Tangocard integration.

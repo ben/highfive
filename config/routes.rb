@@ -12,6 +12,7 @@ Rails.application.routes.draw do
         member do
           post :enable
           post :credit_card
+          post :settings
         end
       end
     end

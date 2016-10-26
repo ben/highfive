@@ -42,6 +42,9 @@ class TangocardController < ApplicationController
     redirect_to controller: :admin, action: :configuration
   end
 
+  def settings
+  end
+
   private
 
   def tango_client
