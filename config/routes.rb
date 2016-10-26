@@ -8,8 +8,8 @@ Rails.application.routes.draw do
     collection do
       get :configuration
       get :login
-      resources :tangocard, only: :index do
-        collection do
+      resource :tangocard, only: [] do
+        member do
           post :enable
           post :credit_card
         end
