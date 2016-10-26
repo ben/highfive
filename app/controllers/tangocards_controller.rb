@@ -1,4 +1,4 @@
-class TangocardController < ApplicationController
+class TangocardsController < ApplicationController
   include AdminTeam
   layout 'admin'
 
@@ -43,6 +43,9 @@ class TangocardController < ApplicationController
   end
 
   def settings
+    current_team.update! settings_params(params)
+    flash[:notice] = 'Settings updated.'
+    redirect_to controller: :admin, action: :configuration
   end
 
   private
@@ -61,5 +64,14 @@ class TangocardController < ApplicationController
 
   def to_identifier(str)
     str.parameterize.gsub(/[^a-zA-Z0-9]/, '')
+  end
+
+  def settings_params(params)
+    params = params.require(:slack_team).permit(:award_limit, :daily_limit, :double_rate, :boomerang_rate)
+    [:double_rate, :boomerang_rate].each do |key|
+      # clamp to [0,100]
+      params[key] = [0, Integer(params[key]), 100].sort[1]
+    end
+    params
   end
 end

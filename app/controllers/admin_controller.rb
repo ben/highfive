@@ -10,6 +10,10 @@ class AdminController < ApplicationController
   def configuration
     @first, @last = current_user_info.real_name.split(' ')
     @email = current_user_info.profile.email
+    current_team.award_limit ||= 150
+    current_team.daily_limit ||= 500
+    current_team.double_rate ||= 10
+    current_team.boomerang_rate ||= 10
   end
 
   private
