@@ -38,9 +38,54 @@ module Tangocard
 
     def create_card(payload)
       resp = @conn.post do |req|
-        req.url "creditCards"
+        req.url 'creditCards'
         req.headers['Content-Type'] = 'application/json'
         req.body = payload.to_json
+      end
+      JSON.parse resp.body
+    end
+
+    def fund_account(customer_id, account_id, card_token, amount)
+      resp = @conn.post do |req|
+        req.url 'creditCardDeposits'
+        req.headers['Content-Type'] = 'application/json'
+        req.body = {
+          customerIdentifier: customer_id,
+          accountIdentifier: account_id,
+          creditCardToken: card_token,
+          amount: amount
+        }
+      end
+      JSON.parse resp.body
+    end
+
+    def send_card(customer_id, account_id,
+                  sender_fn, sender_ln, sender_email,
+                  recipient_fn, recipient_ln, recipient_email,
+                  record_id, subject, message)
+      resp = @conn.post do |req|
+        req.url 'creditCardDeposits'
+        req.headers['Content-Type'] = 'application/json'
+        req.body = {
+          customerIdentifier: customer_id,
+          accountIdentifier: account_id,
+          sendEmail: true,
+          utid: 'U157189', # AMZN US
+          amount: amount,
+          externalRefID: record_id.to_s,
+          sender: {
+            email: sender_email,
+            firstName: sender_fn,
+            lastName: sender_ln
+          },
+          recipient: {
+            email: recipient_email,
+            firstName: recipient_fn,
+            lastName: recipient_ln
+          },
+          emailSubject: subject,
+          message: message
+        }
       end
       JSON.parse resp.body
     end
