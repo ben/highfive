@@ -54,7 +54,7 @@ module Tangocard
           accountIdentifier: account_id,
           creditCardToken: card_token,
           amount: amount
-        }
+        }.to_json
       end
       JSON.parse resp.body
     end
@@ -62,7 +62,7 @@ module Tangocard
     def send_card(customer_id, account_id,
                   sender_fn, sender_ln, sender_email,
                   recipient_fn, recipient_ln, recipient_email,
-                  record_id, subject, message)
+                  amount, record_id, subject, message)
       resp = @conn.post do |req|
         req.url 'creditCardDeposits'
         req.headers['Content-Type'] = 'application/json'
@@ -85,7 +85,7 @@ module Tangocard
           },
           emailSubject: subject,
           message: message
-        }
+        }.to_json
       end
       JSON.parse resp.body
     end

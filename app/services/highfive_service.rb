@@ -20,13 +20,36 @@ module HighfiveService
 
     def valid?
       slack_sender.id != slack_recipient.id
+      true
     end
 
     def commit!
       if valid?
-        @record = HighfiveRecord.create! slack_team_id: @slack_team.id, from: slack_sender.id, to: slack_recipient.id, reason: @reason
-        GoogleTracker.event category: 'highfive', action: 'sent', label: @slack_team.id, value: @amount
+        @record = HighfiveRecord.create! slack_team: @slack_team,
+                                         from: slack_sender.id,
+                                         to: slack_recipient.id,
+                                         reason: @reason,
+                                         currency: 'USD',
+                                         amount: @amount
+        GoogleTracker.event category: 'highfive', action: 'sent', label: @slack_team.id, value: @record.amount
       end
+    end
+
+    def send_card!
+      return if @record.amount.blank? || @record.amount.zero?
+      return if slack_recipient.is_bot || slack_recipient.profile.email.blank?
+      account_status = tango_client.get_account @slack_team.tango_account_identifier
+      puts account_status.inspect
+      fund_tango_account! if account_status['currentBalance'] < @record.amount
+      sender_fn, sender_ln = namify(slack_sender)
+      recipient_fn, recipient_ln = namify(slack_recipient)
+      tango_client.send_card(
+        @slack_team.tango_customer_identifier,
+        @slack_team.tango_account_identifier,
+        sender_fn, sender_ln, slack_sender.profile.email,
+        recipient_fn, recipient_ln, slack_recipient.profile.email,
+        @record.amount, @record.id, email_subject, email_message
+      )
     end
 
     private
@@ -43,6 +66,27 @@ module HighfiveService
       slack_users_list.find { |u| @recipient.in? [u.id, u.name] }
     end
 
+    def fund_tango_account!
+      tango_client.fund_account(
+        @slack_team.tango_customer_identifier,
+        @slack_team.tango_account_identifier,
+        @slack_team.tango_card_token,
+        (@slack_team.award_limit || 150) * 5
+      )
+    end
+
+    def tango_client
+      @tango_client ||= Tangocard::Client.new
+    end
+
+    def email_subject
+      'subject'
+    end
+
+    def email_message
+      'Message!'
+    end
+
     def success
       {
         response_type: 'in_channel',
@@ -53,6 +97,11 @@ module HighfiveService
 
     def self_rebuke
       { text: 'High-fiving yourself is just clapping.' }
+    end
+
+    def namify(slack_user)
+      puts slack_user.inspect
+      ['a', 'b']
     end
 
     def random_gif
