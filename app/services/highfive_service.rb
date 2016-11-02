@@ -20,7 +20,6 @@ module HighfiveService
 
     def valid?
       slack_sender.id != slack_recipient.id
-      true
     end
 
     def commit!
