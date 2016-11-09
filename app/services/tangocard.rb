@@ -1,7 +1,7 @@
 module Tangocard
   class Client
     def initialize
-      @conn = Faraday.new ENV['TANGOCARD_ROOTURL']
+      @conn = Faraday.new ENV['TANGOCARD_ROOTURL'] || 'http://example.com'
       @conn.basic_auth ENV['TANGOCARD_PLATFORM_NAME'], ENV['TANGOCARD_PLATFORM_KEY']
     end
 

@@ -2,53 +2,54 @@ module HighfiveService
   class Highfive
     include SlackClient
 
-    def initialize(slack_team, sender, recipient, reason, amount = nil)
-      @slack_team = slack_team
-      @sender = sender
-      @recipient = recipient
-      @reason = reason
-      @amount = amount
+    def initialize(slack_team, params)
+      @slack_team    = slack_team
+      @sender        = params[:user_id]
+      @recipient     = params[:target_user_id]
+      @reason        = params[:reason]
+      @amount        = Integer(params[:amount])
+      @response_url  = params[:response_url]
+      @record = nil
     end
 
     def message
-      if slack_sender.id == slack_recipient.id
-        self_rebuke
-      else
-        success
+      return self_rebuke if self_five?
+      return bot_rebuke if targeted_at_bot?
+      if @amount.present?
+        return amount_rebuke unless valid_amount?
       end
-    end
-
-    def valid?
-      slack_sender.id != slack_recipient.id
+      success
     end
 
     def commit!
-      if valid?
-        @record = HighfiveRecord.create! slack_team: @slack_team,
+      return if message.to_json != success.to_json
+      @record ||= HighfiveRecord.create!(slack_team: @slack_team,
                                          from: slack_sender.id,
                                          to: slack_recipient.id,
                                          reason: @reason,
                                          currency: 'USD',
-                                         amount: @amount
-        GoogleTracker.event category: 'highfive', action: 'sent', label: @slack_team.id, value: @record.amount
-      end
+                                         amount: @amount)
     end
 
     def send_card!
-      return if @record.amount.blank? || @record.amount.zero?
-      return if slack_recipient.is_bot || slack_recipient.profile.email.blank?
-      account_status = tango_client.get_account @slack_team.tango_account_identifier
-      puts account_status.inspect
-      fund_tango_account! if account_status['currentBalance'] < @record.amount
-      sender_fn, sender_ln = namify(slack_sender)
-      recipient_fn, recipient_ln = namify(slack_recipient)
+      # TODO: reply with  an ephemeral error
+      return if commit!.nil? ||
+                @amount.zero? ||
+                slack_recipient.is_bot ||
+                slack_recipient.profile.email.blank?
+
+      fund_if_necessary
+
+      sender_profile = slack_sender.profile
+      recipient_profile = slack_recipient.profile
       tango_client.send_card(
         @slack_team.tango_customer_identifier,
         @slack_team.tango_account_identifier,
-        sender_fn, sender_ln, slack_sender.profile.email,
-        recipient_fn, recipient_ln, slack_recipient.profile.email,
-        @record.amount, @record.id, email_subject, email_message
+        sender_profile&.first_name, sender_profile&.last_name, sender_profile&.email,
+        recipient_profile&.first_name, recipient_profile&.last_name, recipient_profile&.email,
+        @amount, @record.id, email_subject, email_message
       )
+      GoogleTracker.event category: 'highfive', action: 'sent', label: @slack_team.id, value: @record.amount
     end
 
     private
@@ -65,7 +66,10 @@ module HighfiveService
       slack_users_list.find { |u| @recipient.in? [u.id, u.name] }
     end
 
-    def fund_tango_account!
+    def fund_if_necessary
+      account_status = tango_client.get_account @slack_team.tango_account_identifier
+      return if account_status['currentBalance'] >= @amount
+
       tango_client.fund_account(
         @slack_team.tango_customer_identifier,
         @slack_team.tango_account_identifier,
@@ -94,18 +98,31 @@ module HighfiveService
       }
     end
 
+    def random_gif
+      GIFS.sample
+    end
+
+    def self_five?
+       slack_sender.id == slack_recipient.id
+    end
     def self_rebuke
       { text: 'High-fiving yourself is just clapping.' }
     end
 
-    def namify(slack_user)
-      puts slack_user.inspect
-      ['a', 'b']
+    def targeted_at_bot?
+      slack_recipient.is_bot
+    end
+    def bot_rebuke
+      { text: "Don't high-five bots, you'll break your hand."}
     end
 
-    def random_gif
-      GIFS.sample
+    def valid_amount?
+      @amount.present? && @amount > 0
     end
+    def amount_rebuke
+      { text: "I can't send a gift card for #{@amount.to_s(:currency)}"}
+    end
+
   end
 
   GIFS = [
