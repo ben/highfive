@@ -22,7 +22,7 @@ module HighfiveService
     end
 
     def commit!
-      return if message.to_json != success.to_json
+      return unless success?
       @record ||= HighfiveRecord.create!(slack_team: @slack_team,
                                          from: slack_sender.id,
                                          to: slack_recipient.id,
@@ -45,6 +45,7 @@ module HighfiveService
       tango_client.send_card(
         @slack_team.tango_customer_identifier,
         @slack_team.tango_account_identifier,
+        @slack_team.tango_card_token,
         sender_profile&.first_name, sender_profile&.last_name, sender_profile&.email,
         recipient_profile&.first_name, recipient_profile&.last_name, recipient_profile&.email,
         @amount, @record.id, email_subject, email_message
@@ -88,6 +89,10 @@ module HighfiveService
 
     def email_message
       'Message!'
+    end
+
+    def success?
+      !(self_five? || targeted_at_bot? || (@amount.present? && !valid_amount?))
     end
 
     def success

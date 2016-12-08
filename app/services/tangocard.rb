@@ -59,7 +59,7 @@ module Tangocard
       JSON.parse resp.body
     end
 
-    def send_card(customer_id, account_id,
+    def send_card(customer_id, account_id, cc_token,
                   sender_fn, sender_ln, sender_email,
                   recipient_fn, recipient_ln, recipient_email,
                   amount, record_id, subject, message)
@@ -69,6 +69,7 @@ module Tangocard
         req.body = {
           customerIdentifier: customer_id,
           accountIdentifier: account_id,
+          creditCardToken: cc_token,
           sendEmail: true,
           utid: 'U157189', # AMZN US
           amount: amount,
