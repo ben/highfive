@@ -81,4 +81,6 @@ test:
 production:
   <<: *default
   database: highfive_production
-  url: <%= ENV['DATABASE_URL'] %>
+  host: localhost
+  username: <%= ENV['DATABASE_USER'] %>
+  password: <%= ENV['DATABASE_PASS'] %>
