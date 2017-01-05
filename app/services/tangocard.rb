@@ -64,7 +64,7 @@ module Tangocard
                   recipient_fn, recipient_ln, recipient_email,
                   amount, record_id, subject, message)
       resp = @conn.post do |req|
-        req.url 'creditCardDeposits'
+        req.url 'orders'
         req.headers['Content-Type'] = 'application/json'
         req.body = {
           customerIdentifier: customer_id,

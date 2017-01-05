@@ -39,6 +39,7 @@ class SlackController < ApplicationController
   end
 
   def parse_command
+    # TODO: help output
     return render(json: link) if /help|stats/.match params[:text]
     m = /@(\w+)(?:\s+\$(\S+))?(?:\s+for)?\s+(.*)/.match params[:text]
     return render(json: usage) unless m

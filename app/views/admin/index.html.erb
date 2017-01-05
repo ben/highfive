@@ -14,7 +14,7 @@
 
 <% if @tango_account %>
 <p>
-  Current Tangocard account balance: <strong><%= (@tango_account['currentBalance']/100).to_s(:currency) %></strong>
+  Current Tangocard account balance: <strong><%= @tango_account['currentBalance'].to_s(:currency) %></strong>
 </p>
 <% end %>
 

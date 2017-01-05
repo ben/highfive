@@ -34,19 +34,31 @@ def mock_users_list
     .any_instance
     .expects(:users_list)
     .at_least(0)
-    .returns({members: [USERONE, USERTWO]})
+    .returns(members: [USERONE, USERTWO])
 end
 
 def mock_tango_api(balance: 200)
-  @currentBalance = balance
-  stub_request(:get, "http://example.com/accounts/").
-    to_return(body: {currentBalance: @currentBalance}.to_json)
-  stub_request(:post, "http://example.com/creditCardDeposits").
-    to_return(lambda { |request|
+  @current_balance = balance
+  stub_request(:get, 'http://example.com/accounts/')
+    .to_return(body: { currentBalance: @current_balance }.to_json)
+  stub_request(:post, 'http://example.com/creditCardDeposits')
+    .to_return do |request|
       body = JSON.parse(request.body)
-      @currentBalance += body['amount']
-      {ok: true}.to_json
-    })
+      @current_balance += body['amount']
+      { body: { ok: true }.to_json }
+    end
+
+  stub_request(:post, 'http://example.com/orders')
+    .to_return do |request|
+      body = JSON.parse(request.body)
+      @current_balance -= body['amount']
+      {
+        body: {
+          ok: true,
+          amountCharged: { total: body['amount'] }
+        }.to_json
+      }
+    end
 end
 
 class ActiveSupport::TestCase

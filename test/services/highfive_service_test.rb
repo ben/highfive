@@ -10,8 +10,15 @@ module HighfiveService
       mock_tango_api
     end
 
-    def msg(sender, recipient, reason: 'foo bar baz', amount: nil)
-      @highfive = Highfive.new(slack_teams(:one), sender, recipient, reason, amount)
+    def msg(sender, recipient, reason: 'foo bar baz', amount: '', response_url: nil)
+      @highfive = Highfive.new(
+        slack_teams(:one),
+        user_id: sender.id,
+        target_user_id: recipient.id,
+        reason: reason,
+        amount: amount,
+        response_url: response_url
+      )
       @highfive.commit!
       @highfive.message
     end
@@ -22,7 +29,7 @@ module HighfiveService
     end
 
     test 'success' do
-      response = msg(USERONE.id, USERTWO.name)
+      response = msg(USERONE, USERTWO)
       assert_equal 'in_channel', response[:response_type]
       assert_includes response[:text], USERONE.id
       assert_includes response[:text], USERTWO.id
@@ -34,12 +41,12 @@ module HighfiveService
     end
 
     test 'highfiving yourself' do
-      assert_includes msg('userone', 'userone')[:text], 'clapping'
+      assert_includes msg(USERONE, USERONE)[:text], 'clapping'
       assert_equal 0, HighfiveRecord.where(from: USERONE.id, to: USERONE.id).count
     end
 
     test 'with an amount' do
-      response = msg(USERONE.id, USERTWO.name, amount: 20)
+      response = msg(USERONE, USERTWO, amount: 20)
       assert_equal 'in_channel', response[:response_type]
       assert_includes response[:text], USERONE.id
       assert_includes response[:text], USERTWO.id
@@ -52,7 +59,9 @@ module HighfiveService
     end
 
     test 'sending a gift card' do
-      card(USERONE.id, USERTWO.name, amount: 20)
+      resp = card(USERONE, USERTWO, amount: 20)
+      assert_equal resp['amountCharged']['total'], 20
+      assert_equal @current_balance, 180
     end
   end
 end
