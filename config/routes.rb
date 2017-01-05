@@ -28,4 +28,6 @@ Rails.application.routes.draw do
 
   post '/slack/command', to: 'slack#command'
   post '/slack/interact', to: 'slack#interact'
+
+  mount Resque::Server.new, at: '/resque'
 end
