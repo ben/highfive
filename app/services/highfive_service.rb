@@ -123,7 +123,7 @@ module HighfiveService
     end
 
     def self_five?
-       slack_sender.id == slack_recipient.id
+      slack_sender.id == slack_recipient.id
     end
     def self_rebuke
       { text: 'High-fiving yourself is just clapping.' }

@@ -16,8 +16,6 @@ class SlackController < ApplicationController
     #   "text"=>"@ben $50 for stuff",
     #   "response_url"=>"https://hooks.slack.com/commands/T0HAGP0J2/85579917141/ToVvZJbtRCua2FVFjPihSSmf"
     # }
-    # team = SlackTeam.find_by_team_id params[:team_id]
-
     highfive = HighfiveService::Highfive.new slack_team, params
     highfive.commit!
     highfive.send_card!

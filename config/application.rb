@@ -13,8 +13,8 @@ module Highfive
     # -- all .rb files in that directory are automatically loaded.
 
     config.cache_store = :redis_store, "#{ENV['REDISTOGO_URL']}/0/cache", { expires_in: 90.minutes }
-
     config.autoload_paths << Rails.root.join('services')
 
+    config.active_job.queue_adapter = :resque
   end
 end
