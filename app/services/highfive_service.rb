@@ -43,26 +43,7 @@ module HighfiveService
                 @amount.zero? ||
                 slack_recipient.is_bot ||
                 slack_recipient.profile.email.blank?
-
-      fund_if_necessary
-
-      sender_profile = slack_sender.profile
-      recipient_profile = slack_recipient.profile
-      resp = tango_client.send_card(
-        @slack_team.tango_customer_identifier,
-        @slack_team.tango_account_identifier,
-        @slack_team.tango_card_token,
-        sender_profile&.first_name, sender_profile&.last_name, sender_profile&.email,
-        recipient_profile&.first_name, recipient_profile&.last_name, recipient_profile&.email,
-        @amount, @record.id, email_subject, email_message
-      )
-
-      # TODO: referenceOrderID, reward['credentials']['Claim Code']
-      # @record.update_columns {
-      # }
-
-      GoogleTracker.event category: 'highfive', action: 'sent', label: @slack_team.id, value: @record.amount
-      resp
+      TangoCardJob.perform_later(@record.id)
     end
 
     private
@@ -79,31 +60,8 @@ module HighfiveService
       slack_users_list.find { |u| @recipient.in? [u.id, u.name] }
     end
 
-    def fund_if_necessary
-      account_status = tango_client.get_account @slack_team.tango_account_identifier
-      balance = account_status['currentBalance']
-      return if balance >= @amount
-
-      fund_amount = (@slack_team.award_limit || 150) * 5
-      tango_client.fund_account(
-        @slack_team.tango_customer_identifier,
-        @slack_team.tango_account_identifier,
-        @slack_team.tango_card_token,
-        fund_amount
-      )
-    end
-
     def tango_client
       @tango_client ||= Tangocard::Client.new
-    end
-
-    def email_subject
-      'subject'
-    end
-
-    def email_message
-      # TODO: sender.profile.name?
-      'Message!'
     end
 
     def success?
