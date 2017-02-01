@@ -59,9 +59,10 @@ module HighfiveService
     end
 
     test 'sending a gift card' do
-      resp = card(USERONE, USERTWO, amount: 20)
-      assert_equal resp['amountCharged']['total'], 20
-      assert_equal @current_balance, 180
+      job = card(USERONE, USERTWO, amount: 20)
+      assert_equal job.queue_name, 'default'
+      record = HighfiveRecord.find(job.arguments[0])
+      assert_equal record.amount, 20
     end
   end
 end
