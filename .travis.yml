@@ -4,5 +4,6 @@ branches:
     - master
 services:
   - postgresql
+  - redis-server
 before_script:
   - psql -c 'create database highfive_test;' -U postgres

@@ -1,13 +1,10 @@
-class TangocardController < ApplicationController
+class TangocardsController < ApplicationController
   include AdminTeam
   layout 'admin'
 
   before_action :requires_login
 
   def enable
-    customer_identifier = to_identifier(current_team.team_subdomain)
-    account_identifier = to_identifier(current_user_info[:real_name])
-
     tango_client.create_customer customer_identifier
 
     tango_client.create_account(
@@ -45,13 +42,36 @@ class TangocardController < ApplicationController
     redirect_to controller: :admin, action: :configuration
   end
 
+  def settings
+    current_team.update! settings_params(params)
+    flash[:notice] = 'Settings updated.'
+    redirect_to controller: :admin, action: :configuration
+  end
+
   private
 
   def tango_client
     Tangocard::Client.new
   end
 
+  def customer_identifier
+    to_identifier(current_team.team_subdomain)
+  end
+
+  def account_identifier
+    to_identifier("#{customer_identifier}-#{current_user_info[:real_name]}")
+  end
+
   def to_identifier(str)
     str.parameterize.gsub(/[^a-zA-Z0-9]/, '')
+  end
+
+  def settings_params(params)
+    params = params.require(:slack_team).permit(:award_limit, :daily_limit, :double_rate, :boomerang_rate)
+    [:double_rate, :boomerang_rate].each do |key|
+      # clamp to [0,100]
+      params[key] = [0, Integer(params[key]), 100].sort[1]
+    end
+    params
   end
 end

@@ -2,31 +2,48 @@ module HighfiveService
   class Highfive
     include SlackClient
 
-    def initialize(slack_team, sender, recipient, reason, amount = nil)
-      @slack_team = slack_team
-      @sender = sender
-      @recipient = recipient
-      @reason = reason
-      @amount = amount
+    def initialize(slack_team, params)
+      @slack_team    = slack_team
+      @sender        = params[:user_id]
+      @recipient     = params[:target_user_id]
+      @reason        = params[:reason]
+      @response_url  = params[:response_url]
+      @record        = nil
+
+      begin
+        @amount = Integer(params[:amount])
+      rescue TypeError, ArgumentError
+        @amount = nil
+      end
     end
 
     def message
-      if slack_sender.id == slack_recipient.id
-        self_rebuke
-      else
-        success
+      return self_rebuke if self_five?
+      return bot_rebuke if targeted_at_bot?
+      if @amount.present?
+        return amount_rebuke unless valid_amount?
       end
-    end
-
-    def valid?
-      slack_sender.id != slack_recipient.id
+      success
     end
 
     def commit!
-      if valid?
-        @record = HighfiveRecord.create! slack_team_id: @slack_team.id, from: slack_sender.id, to: slack_recipient.id, reason: @reason
-        GoogleTracker.event category: 'highfive', action: 'sent', label: @slack_team.id, value: 0 # TODO: include dollar amount
-      end
+      return unless success?
+      @record ||= HighfiveRecord.create!(slack_team: @slack_team,
+                                         from: slack_sender.id,
+                                         to: slack_recipient.id,
+                                         reason: @reason,
+                                         currency: 'USD',
+                                         amount: @amount)
+    end
+
+    def send_card!
+      # TODO: reply with  an ephemeral error
+      return if commit!.nil? ||
+                @amount.blank? ||
+                @amount.zero? ||
+                slack_recipient.is_bot ||
+                slack_recipient.profile.email.blank?
+      TangoCardJob.perform_later(@record.id)
     end
 
     private
@@ -43,6 +60,14 @@ module HighfiveService
       slack_users_list.find { |u| @recipient.in? [u.id, u.name] }
     end
 
+    def tango_client
+      @tango_client ||= Tangocard::Client.new
+    end
+
+    def success?
+      !(self_five? || targeted_at_bot? || (@amount.present? && !valid_amount?))
+    end
+
     def success
       {
         response_type: 'in_channel',
@@ -51,13 +76,31 @@ module HighfiveService
       }
     end
 
+    def random_gif
+      GIFS.sample
+    end
+
+    def self_five?
+      slack_sender.id == slack_recipient.id
+    end
     def self_rebuke
       { text: 'High-fiving yourself is just clapping.' }
     end
 
-    def random_gif
-      GIFS.sample
+    def targeted_at_bot?
+      slack_recipient.is_bot
     end
+    def bot_rebuke
+      { text: "Don't high-five bots, you'll break your hand."}
+    end
+
+    def valid_amount?
+      @amount.present? && @amount > 0
+    end
+    def amount_rebuke
+      { text: "I can't send a gift card for #{@amount.to_s(:currency)}"}
+    end
+
   end
 
   GIFS = [

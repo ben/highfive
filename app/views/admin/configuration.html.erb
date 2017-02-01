@@ -3,6 +3,13 @@
   <%= render 'tangocard_prompt' %>
 </div>
 
+<% if flash[:notice] %>
+<div class="alert alert-success alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <%= flash[:notice] %>
+</div>
+<% end %>
+
 <% if flash[:validation_errors] %>
   <div class="alert alert-danger">
     We can't handle your submission:
@@ -31,37 +38,36 @@
       <h4 class="panel-title">
         <a role="button" data-toggle="collapse" href="#cc_panel">
           Credit Card Information
+          <% if current_team.tango_card_token %>(click to reconfigure)<% end %>
         </a>
       </h4>
     </div>
     <div id="cc_panel" class="panel-collapse collapse <%= 'in' unless current_team.tango_card_token %>">
       <div class="panel-body">
-        <%= bootstrap_form_tag url: credit_card_tangocard_index_path, layout: :horizontal, label_col: "col-sm-3", control_col: "col-sm-9" do |form| %>
+        <%= bootstrap_form_tag url: credit_card_tangocard_path, layout: :horizontal, label_col: "col-sm-3", control_col: "col-sm-8" do |form| %>
           <%= form.hidden_field :customerIdentifier, value: current_team.tango_customer_identifier %>
           <%= form.hidden_field :accountIdentifier, value: current_team.tango_account_identifier %>
           <%= form.hidden_field :label, value: 'card' %>
 
-          <div class="well">
-            <h3>Card</h3>
-            <%= form.text_field :number, label: 'Card Number', placeholder: 'No dashes or spaces please' %>
-            <%= form.text_field :expiration, placeholder: 'YYYY-MM' %>
-            <%= form.text_field :verificationNumber, label: 'CVV', placeholder: '3 or 4 digits' %>
-          </div>
+          <h3 class="col-sm-offset-3 col-sm-9">Card</h3>
+          <%= form.text_field :number, label: 'Card Number', placeholder: 'No dashes or spaces please' %>
+          <%= form.text_field :expiration, placeholder: 'YYYY-MM' %>
+          <%= form.text_field :verificationNumber, label: 'CVV', placeholder: '3 or 4 digits' %>
 
-          <div class="well">
-            <h3>Billing</h3>
-            <%= form.text_field :firstName, label: 'First Name', value: @first %>
-            <%= form.text_field :lastName, label: 'Last Name', value: @last %>
-            <%= form.email_field :emailAddress, label: 'Email', value: @email %>
-            <%= form.text_field :addressLine1, label: 'Street Address' %>
-            <%= form.text_field :addressLine2, hide_label: true %>
-            <%= form.text_field :city %>
-            <%= form.text_field :state %>
-            <%= form.text_field :postalCode, label: 'Postal Code' %>
-            <%= form.text_field :country %>
-          </div>
+          <h3 class="col-sm-offset-3 col-sm-9">Billing</h3>
+          <%= form.text_field :firstName, label: 'First Name', value: @first %>
+          <%= form.text_field :lastName, label: 'Last Name', value: @last %>
+          <%= form.email_field :emailAddress, label: 'Email', value: @email %>
+          <%= form.text_field :addressLine1, label: 'Street Address' %>
+          <%= form.text_field :addressLine2, hide_label: true %>
+          <%= form.text_field :city %>
+          <%= form.text_field :state %>
+          <%= form.text_field :postalCode, label: 'Postal Code' %>
+          <%= form.text_field :country %>
 
-          <%= form.submit class: 'col-sm-offset-3 col-sm-9 btn btn-success' %>
+          <%= form.form_group do %>
+            <%= form.primary %>
+          <% end %>
         <% end %>
 
         <div class="small text-danger">
@@ -70,6 +76,35 @@
         </div>
 
       </div>
+    </div>
+  </div>
+
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        Gift Card Settings
+      </h4>
+    </div>
+    <div class="panel-body">
+      <%= bootstrap_form_for(current_team, url: settings_tangocard_path, layout: :horizontal, label_col: "col-sm-3", control_col: "col-sm-8" ) do |form| %>
+        <div class="form-group">
+          <label class="control-label col-sm-3">Gift card type</label>
+          <div class="col-sm-8">
+            <select class="form-control">
+              <option>Amazon US</option>
+            </select>
+            <!-- <input class="form-control" type="text" value="Amazon US" readonly> -->
+            <span class="help-block">More coming soon!</span>
+          </div>
+        </div>
+        <%= form.text_field :award_limit, prepend: '$', append: '.00', help: 'No single high-five can award more than this dollar amount.' %>
+        <%= form.text_field :daily_limit, prepend: '$', append: '.00', help: 'No user can award more than this dollar amount in a single day.' %>
+        <%= form.text_field :double_rate, append: '%', help: "Sometimes, just for fun, we'll double a high-five gift card amount." %>
+        <%= form.text_field :boomerang_rate, append: '%', help: 'Probability of the giver receiving an equal gift card to what they sent.' %>
+        <%= form.form_group do %>
+          <%= form.primary 'Save settings' %>
+        <% end %>
+      <% end %>
     </div>
   </div>
 

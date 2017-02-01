@@ -33,6 +33,9 @@ module AdminTeam
   end
 
   def logged_in?
+    current_user_info
     session.key? 'team_id'
+  rescue
+    false
   end
 end

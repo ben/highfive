@@ -10,24 +10,55 @@ require "mocha/mini_test"
 require 'hash_dot'
 Hash.use_dot_syntax = true
 
-USERONE = {
-  id: 'useroneid',
-  team: 'teamone',
-  name: 'userone'
-}
+class FakeUser
+  attr_reader :id, :team, :name, :is_bot, :profile
 
-USERTWO = {
-  id: 'usertwoid',
-  team: 'teamone',
-  name: 'usertwo'
-}
+  def initialize(id, name, team: 'teamone', is_bot: false, email: nil)
+    @id = id
+    @name = name
+    @team = team
+    @is_bot = is_bot
+    @profile = {
+      first_name: name,
+      last_name: name,
+      email: email || "#{@name}@example.com"
+    }.to_dot
+  end
+end
+
+USERONE = FakeUser.new 'useroneid', 'userone'
+USERTWO = FakeUser.new 'usertwoid', 'usertwo'
 
 def mock_users_list
   Slack::Web::Client
     .any_instance
     .expects(:users_list)
     .at_least(0)
-    .returns({members: [USERONE, USERTWO]})
+    .returns(members: [USERONE, USERTWO])
+end
+
+def mock_tango_api(balance: 200)
+  @current_balance = balance
+  stub_request(:get, 'http://example.com/accounts/')
+    .to_return(body: { currentBalance: @current_balance }.to_json)
+  stub_request(:post, 'http://example.com/creditCardDeposits')
+    .to_return do |request|
+      body = JSON.parse(request.body)
+      @current_balance += body['amount']
+      { body: { ok: true }.to_json }
+    end
+
+  stub_request(:post, 'http://example.com/orders')
+    .to_return do |request|
+      body = JSON.parse(request.body)
+      @current_balance -= body['amount']
+      {
+        body: {
+          ok: true,
+          amountCharged: { total: body['amount'] }
+        }.to_json
+      }
+    end
 end
 
 class ActiveSupport::TestCase

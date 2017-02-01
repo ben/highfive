@@ -14,7 +14,7 @@
 
 <% if @tango_account %>
 <p>
-  Current Tangocard account balance: <strong>$<%= format '%.2f', @tango_account['currentBalance']/100 %></strong>
+  Current Tangocard account balance: <strong><%= @tango_account['currentBalance'].to_s(:currency) %></strong>
 </p>
 <% end %>
 
@@ -39,7 +39,7 @@
           <td><%= name_fallback record.slack_from %></td>
           <td><%= name_fallback record.slack_to %></td>
           <td><%= record.reason %></td>
-          <td><%= record.amount || '—' %></td>
+          <td><%= record.amount&.to_s(:currency) || '—' %></td>
           <td><%= record.card_code ? '<em>REDACTED</em>'.html_safe : '—' %></td>
         </tr>
       <% end %>
