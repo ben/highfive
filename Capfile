@@ -38,13 +38,4 @@ install_plugin Capistrano::SCM::Git
 Dir.glob('lib/capistrano/tasks/*.rake').each { |r| import r }
 
 require 'capistrano/foreman'
-
-# Default settings
-set :foreman_use_sudo, false # Set to :rbenv for rbenv sudo, :rvm for rvmsudo or true for normal sudo
-set :foreman_roles, :all
-set :foreman_template, 'upstart'
 set :foreman_export_path, '/etc/init'
-set :foreman_options, -> { {
-  app: 'highfive',
-  log: File.join(shared_path, 'log')
-} }
