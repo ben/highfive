@@ -39,5 +39,5 @@ Dir.glob('lib/capistrano/tasks/*.rake').each { |r| import r }
 
 require 'capistrano/foreman'
 namespace :foreman do
-  set :foreman_export_path, '/etc/init'
+  set :foreman_export_path, -> { '/etc/init' }
 end
