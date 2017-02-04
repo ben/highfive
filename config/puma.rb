@@ -23,7 +23,7 @@ environment rails_env
 # Workers do not work on JRuby or Windows (both of which do not support
 # processes).
 #
-# workers ENV.fetch("WEB_CONCURRENCY") { 2 }
+workers ENV.fetch("WEB_CONCURRENCY") { 2 }
 
 # Use the `preload_app!` method when specifying a `workers` number.
 # This directive tells Puma to first boot the application and load code
@@ -59,9 +59,10 @@ if ENV.fetch("RAILS_ENV") == 'production'
   activate_control_app
 
   on_worker_boot do
-    # require 'active_record'
-    # ActiveRecord::Base.connection.disconnect! rescue ActiveRecord::ConnectionNotEstablished
-    # ActiveRecord::Base.establish_connection(YAML.load_file("#{app_dir}/config/database.yml")[rails_env])
+    require "active_record"
+    cwd = File.dirname(__FILE__)+"/.."
+    ActiveRecord::Base.connection.disconnect! rescue ActiveRecord::ConnectionNotEstablished
+    ActiveRecord::Base.establish_connection(ENV['DATABASE_URL'] || YAML.load_file("#{cwd}/config/database.yml")[ENV['RAILS_ENV']])
   end
 
   preload_app!
