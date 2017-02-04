@@ -50,7 +50,7 @@ plugin :tmp_restart
 
 if ENV.fetch("RAILS_ENV") == 'production'
   app_dir = File.expand_path('../..', __FILE__)
-  shared_dir = "#{app_dir}/shared"
+  shared_dir = "#{app_dir}/tmp"
 
   workers ENV.fetch("WEB_CONCURRENCY") { 2 }
   bind "unix://#{shared_dir}/sockets/puma.sock"

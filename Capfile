@@ -36,3 +36,15 @@ install_plugin Capistrano::SCM::Git
 
 # Load custom tasks from `lib/capistrano/tasks` if you have any defined
 Dir.glob("lib/capistrano/tasks/*.rake").each { |r| import r }
+
+require 'capistrano/foreman'
+
+# Default settings
+set :foreman_use_sudo, false # Set to :rbenv for rbenv sudo, :rvm for rvmsudo or true for normal sudo
+set :foreman_roles, :all
+set :foreman_template, 'upstart'
+set :foreman_export_path, ->{ File.join(Dir.home, '.init') }
+set :foreman_options, -> { {
+  app: 'highfive',
+  log: File.join(shared_path, 'log')
+} }
