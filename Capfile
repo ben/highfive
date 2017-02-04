@@ -38,4 +38,3 @@ install_plugin Capistrano::SCM::Git
 Dir.glob('lib/capistrano/tasks/*.rake').each { |r| import r }
 
 require 'capistrano/foreman'
-set :foreman_export_path, '/etc/init'

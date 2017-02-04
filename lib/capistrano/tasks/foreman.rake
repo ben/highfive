@@ -38,3 +38,5 @@
 #     end
 #   end
 # end
+
+set :foreman_export_path, '/etc/init'
