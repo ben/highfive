@@ -59,6 +59,7 @@ namespace :foreman do
     when 'chruby'
       execute(:sudo, 'chruby-exec', fetch(:chruby_ruby), '--', *args)
     else
+      args.unshift(:rbenv, :exec) if args[0].to_s == 'foreman'
       sudo_type ? sudo(*args) : execute(*args)
     end
   end
@@ -67,11 +68,14 @@ end
 namespace :load do
   task :defaults do
     set :bundle_bins, fetch(:bundle_bins, []).push(:foreman)
-    set :foreman_use_sudo, true
+    set :foreman_use_sudo, false
     set :foreman_template, 'upstart'
     set :foreman_export_path, '/etc/init'
     set :foreman_roles, :all
     set :foreman_app, -> { fetch(:application) }
+    # set :foreman_options, ->{ {
+    #   user: 'bitnami'
+    # } }
 
     if !fetch(:rvm_map_bins).nil?
       set :rvm_map_bins, fetch(:rvm_map_bins).push('foreman')
