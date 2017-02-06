@@ -68,7 +68,7 @@ end
 namespace :load do
   task :defaults do
     set :bundle_bins, fetch(:bundle_bins, []).push(:foreman)
-    set :foreman_use_sudo, false
+    set :foreman_use_sudo, true
     set :foreman_template, 'upstart'
     set :foreman_export_path, '/etc/init'
     set :foreman_roles, :all
