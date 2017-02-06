@@ -25,7 +25,7 @@ ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
 append :linked_files, '.env'
 
 # Default value for linked_dirs is []
-append :linked_dirs, 'tmp/pids', 'tmp/cache', 'tmp/sockets'
+append :linked_dirs, 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'log'
 
 # Default value for default_env is {}
 # set :default_env, { path: '/opt/ruby/bin:$PATH' }
