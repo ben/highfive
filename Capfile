@@ -30,8 +30,9 @@ require 'capistrano/rvm'
 # require 'capistrano/rbenv'
 # require 'capistrano/chruby'
 require 'capistrano/bundler'
+require 'capistrano/rails'
 # require 'capistrano/rails/assets'
-require 'capistrano/rails/migrations'
+# require 'capistrano/rails/migrations'
 # require 'capistrano/passenger'
 
 set :default_env, { rvm_bin_path: '~/.rvm/bin' }
@@ -47,3 +48,4 @@ set :rvm_ruby_version, '2.3.1'
 # set :bundle_without, %w(test development).join(' ')
 # set :bundle_binstubs, -> { shared_path.join('bin') }
 set :bundle_roles, :all
+set :assets_roles, :app
