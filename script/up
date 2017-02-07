@@ -2,7 +2,8 @@
 set -e
 
 unset DOCKER_HOST
+export RAILS_ENV=development
 
 docker-compose up -d
-bin/rails s
+foreman start
 docker-compose stop

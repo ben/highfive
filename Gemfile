@@ -27,9 +27,6 @@ gem 'jbuilder', '~> 2.5'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
-# Use Capistrano for deployment
-# gem 'capistrano-rails', group: :development
-
 gem 'bootstrap-sass', '~> 3.3.6'
 gem 'bootstrap_form'
 gem 'slack-ruby-client'
@@ -38,6 +35,7 @@ gem 'momentjs-rails'
 gem 'staccato'
 gem 'sinatra', '2.0.0.beta2'
 gem 'resque'
+gem 'foreman'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -54,7 +52,9 @@ group :development do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
-  gem 'dotenv-rails', :require => 'dotenv/rails-now'
+  gem 'dotenv-rails', require: 'dotenv/rails-now'
+  gem 'capistrano-rails'
+  gem 'capistrano-rvm'
 end
 
 group :test do
