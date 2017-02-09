@@ -49,3 +49,4 @@ set :rvm_ruby_version, '2.3.1'
 # set :bundle_binstubs, -> { shared_path.join('bin') }
 set :bundle_roles, :all
 set :assets_roles, :app
+set :migration_role, :app
