@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
-unset DOCKER_HOST
 export RAILS_ENV=development
+export PORT=5010
 
 docker-compose up -d
 foreman start
