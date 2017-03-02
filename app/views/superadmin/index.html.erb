@@ -3,15 +3,15 @@
 <!-- TODO: filter  -->
 <table class="table table-striped">
   <thead>
-    <th> Team ID </th>
-    <th> Subdomain </th>
+    <th> Team </th>
+    <th> Highfive Count </th>
     <th> Actions </th>
   </thead>
   <tbody>
     <% @teams.each do |team| %>
     <tr>
-      <td> <%= team.team_id %> </td>
-      <td> <em>TODO</em> </td>
+      <td><code> <%= team.team_subdomain %> </code></td>
+      <td><%= team.highfive_records.count %></td>
       <td>
         <%= form_for 'impersonate', url: '/superadmin/impersonate', html: {target: '_blank'} do %>
           <input type="hidden" name="team_id" value="<%= team.team_id %>">

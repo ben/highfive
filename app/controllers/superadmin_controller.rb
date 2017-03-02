@@ -2,7 +2,7 @@ class SuperadminController < ApplicationController
   before_action :requires_login, except: [:login, :login_attempt]
 
   def index
-    @teams = SlackTeam.all
+    @teams = SlackTeam.includes(:highfive_records)
   end
 
   def login
