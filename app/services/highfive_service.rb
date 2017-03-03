@@ -33,7 +33,8 @@ module HighfiveService
                                          to: slack_recipient.id,
                                          reason: @reason,
                                          currency: 'USD',
-                                         amount: @amount)
+                                         amount: @amount,
+                                         slack_response_url: @response_url)
     end
 
     def send_card!
