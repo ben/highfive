@@ -22,17 +22,53 @@ class SlackController < ApplicationController
   end
 
   def interact
-    # TODO when confirmation is needed
+    # {
+    #   "actions"=>[{"name"=>"confirm", "type"=>"button", "value"=>"yes"}],
+    #   "callback_id"=>"66",
+    #   "team"=>{"id"=>"T2SLQPU2W", "domain"=>"highfive-chat"},
+    #   "channel"=>{"id"=>"C2SLJPMRD", "name"=>"general"},
+    #   "user"=>{"id"=>"U2SLE6X2R", "name"=>"ben"},
+    #   "action_ts"=>"1497494424.959961",
+    #   "message_ts"=>"1497494263.000002",
+    #   "attachment_id"=>"1",
+    #   "token"=>"QPzHTgsdiAM54POxbTdu5evY",
+    #   "is_app_unfurl"=>false,
+    #   "response_url"=>"https://hooks.slack.com/actions/T2SLQPU2W/197985545363/RCqSzDbACOqeOvlj8o091dtd"
+    # }
+    send_card = @json['actions'][0]['value'] === 'yes'
+    @record = HighfiveRecord.find(@json['callback_id'])
+    render json: send_card ? card_confirmed : card_canceled
   end
 
   private
+
+  def card_confirmed
+    TangoCardJob.perform_later @record.id
+    post_to_response_url(
+      channel: @json['channel']['id'],
+      response_type: 'in_channel',
+      text: HighfiveService::Highfive::gif_response_for_record(@record)
+    )
+    {
+      text: ':+1:'
+    }
+  end
+
+  def card_canceled
+    {
+      text: ':disappointed: ok'
+    }
+  end
 
   def ssl_check
     head :ok if params[:ssl_check]
   end
 
   def verify_slack_token
-    head :unauthorized unless params[:token] == ENV['SLACK_VERIFICATION_TOKEN']
+    return if params[:token] == ENV['SLACK_VERIFICATION_TOKEN']
+    @json = JSON.parse(params[:payload] || '"{}"')
+    return if @json['token'] == ENV['SLACK_VERIFICATION_TOKEN']
+    head :unauthorized
   end
 
   def parse_command
@@ -55,6 +91,11 @@ class SlackController < ApplicationController
     {
       text: "Visit the <#{ENV['HOSTNAME']}/admin|Highfive site> for info on your team's activity."
     }
+  end
+
+  def post_to_response_url(payload)
+    conn = Faraday.post(@record.slack_response_url, JSON.dump(payload))
+
   end
 
   def slack_team

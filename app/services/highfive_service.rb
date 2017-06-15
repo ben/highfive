@@ -37,11 +37,17 @@ module HighfiveService
                                          slack_response_url: @response_url)
     end
 
+    def self.gif_response_for_record(record)
+      "<!channel> <@#{record.from}> is `/highfive`ing <@#{record.to}> for #{record.reason}! " \
+      "<#{random_gif}|:hand:> " \
+      "A #{record.amount.to_s(:currency)} gift card is on its way!"
+    end
+
     def gif_response
       {
         response_type: 'in_channel',
         text: "<!channel> <@#{slack_sender.id}> is high-fiving <@#{slack_recipient.id}> for #{@reason} " \
-              "<#{random_gif}|:hand:>"
+              "<#{Highfive::random_gif}|:hand:>"
       }
     end
 
@@ -84,7 +90,7 @@ module HighfiveService
       !(self_five? || targeted_at_bot? || (@amount.present? && !valid_amount?))
     end
 
-    def random_gif
+    def self.random_gif
       GIFS.sample
     end
 
