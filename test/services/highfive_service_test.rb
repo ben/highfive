@@ -47,22 +47,14 @@ module HighfiveService
 
     test 'with an amount' do
       response = msg(USERONE, USERTWO, amount: 20)
-      assert_equal 'in_channel', response[:response_type]
-      assert_includes response[:text], USERONE.id
+      assert_equal 'ephemeral', response[:response_type]
       assert_includes response[:text], USERTWO.id
-      assert_includes response[:text], 'foo bar baz'
+      assert_includes response[:text], 'about to send'
       record = HighfiveRecord.last
       assert_equal record.from, USERONE.id
       assert_equal record.to, USERTWO.id
       assert_equal record.reason, 'foo bar baz'
       assert_equal record.amount, 20.00
-    end
-
-    test 'sending a gift card' do
-      job = card(USERONE, USERTWO, amount: 20)
-      assert_equal job.queue_name, 'default'
-      record = HighfiveRecord.find(job.arguments[0])
-      assert_equal record.amount, 20
     end
   end
 end
