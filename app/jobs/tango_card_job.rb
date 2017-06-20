@@ -65,7 +65,7 @@ class TangoCardJob < ApplicationJob
   end
 
   def email_message
-    "High five for '#{@record.reason}'"
+    "High five for ‘#{@record.reason.gsub(/[']/, '')}’"
   end
 
 end
