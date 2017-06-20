@@ -21,8 +21,7 @@ class TangoCardJob < ApplicationJob
     )
 
     if resp['errors']
-      errorstr = resp['errors'].map {|x| x['message']}.join(',')
-      puts "ERROR: Team #{slack_team.team_id} failed to send card: '#{errorstr}'"
+      puts "ERROR: Team #{slack_team.team_id} failed to send card: #{resp}"
     else
       puts "INFO: Team #{slack_team.team_id} card sent!"
       @record.update_attributes(
@@ -53,8 +52,7 @@ class TangoCardJob < ApplicationJob
     )
 
     if resp['errors']
-      errorstr = resp['errors'].map {|x| x['message']}.join(',')
-      puts "ERROR: Team #{slack_team.team_id} failed to fund: '#{errorstr}'"
+      puts "ERROR: Team #{slack_team.team_id} failed to fund: #{resp}"
     else
       puts "INFO: Team #{slack_team.team_id} funding succeeded!"
     end
