@@ -71,7 +71,7 @@ module Tangocard
           accountIdentifier: account_id,
           creditCardToken: cc_token,
           sendEmail: true,
-          utid: 'U157189', # AMZN US
+          utid: 'U666425', # AMZN US
           amount: amount,
           externalRefID: record_id.to_s,
           sender: {

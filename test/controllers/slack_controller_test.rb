@@ -14,9 +14,16 @@ class SlackControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  test 'slack token check' do
+  test 'slack token check for command' do
     post '/slack/command', params: {
       token: 'not a match'
+    }
+    assert_response :unauthorized
+  end
+
+  test 'slack token check for interaction' do
+    post '/slack/command', params: {
+      payload: JSON.dump(token: 'not a match')
     }
     assert_response :unauthorized
   end

@@ -20,10 +20,10 @@ module HighfiveService
     def message
       return self_rebuke if self_five?
       return bot_rebuke if targeted_at_bot?
-      if @amount.present?
-        return amount_rebuke unless valid_amount?
-      end
-      success
+      return gif_response unless @amount.present?
+
+      return amount_rebuke unless valid_amount?
+      confirm_response
     end
 
     def commit!
@@ -33,17 +33,39 @@ module HighfiveService
                                          to: slack_recipient.id,
                                          reason: @reason,
                                          currency: 'USD',
-                                         amount: @amount)
+                                         amount: @amount,
+                                         slack_response_url: @response_url)
     end
 
-    def send_card!
-      # TODO: reply with  an ephemeral error
-      return if commit!.nil? ||
-                @amount.blank? ||
-                @amount.zero? ||
-                slack_recipient.is_bot ||
-                slack_recipient.profile.email.blank?
-      TangoCardJob.perform_later(@record.id)
+    def self.gif_response_for_record(record)
+      "<!channel> <@#{record.from}> is `/highfive`ing <@#{record.to}> for #{record.reason}! " \
+      "<#{random_gif}|:hand:> " \
+      "A #{record.amount.to_s(:currency)} gift card is on its way!"
+    end
+
+    def gif_response
+      {
+        response_type: 'in_channel',
+        text: "<!channel> <@#{slack_sender.id}> is high-fiving <@#{slack_recipient.id}> for #{@reason} " \
+              "<#{Highfive::random_gif}|:hand:>"
+      }
+    end
+
+    def confirm_response
+      {
+        text: "I'm about to send a #{@amount.to_s(:currency)} gift card to <@#{slack_recipient.id}>.",
+        response_type: 'ephemeral',
+        attachments: [{
+          text: 'Please confirm.',
+          fallback: "Whoops, you can't confirm right now.",
+          attachment_type: 'default',
+          callback_id: @record.id,
+          actions: [
+            { name: 'confirm', type: 'button', text: 'Send it!', value: 'yes', style: 'primary' },
+            { name: 'confirm', type: 'button', text: 'Never mind', value: 'no' },
+          ]
+        }]
+      }
     end
 
     private
@@ -68,15 +90,7 @@ module HighfiveService
       !(self_five? || targeted_at_bot? || (@amount.present? && !valid_amount?))
     end
 
-    def success
-      {
-        response_type: 'in_channel',
-        text: "<!channel> <@#{slack_sender.id}> is high-fiving <@#{slack_recipient.id}> for #{@reason} " \
-              "<#{random_gif}|:hand:>"
-      }
-    end
-
-    def random_gif
+    def self.random_gif
       GIFS.sample
     end
 
