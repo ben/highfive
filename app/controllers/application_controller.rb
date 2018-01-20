@@ -7,16 +7,18 @@ class ApplicationController < ActionController::Base
 
   protected
 
+  SCOPES = %w(commands chat:write:bot users:read users:read.email team:read)
+
   def add_app_url
     'https://slack.com/oauth/authorize' \
     "?client_id=#{ENV['SLACK_CLIENT_ID']}" \
-    '&scope=commands,users:read,team:read'
+    "&scope=#{SCOPES.join(',')}"
   end
 
   def slack_login_url
     'https://slack.com/oauth/authorize' \
     "?client_id=#{ENV['SLACK_CLIENT_ID']}" \
     "&redirect_uri=#{ENV['HOSTNAME']}#{url_for '/slack_auth'}" \
-    '&scope=users:read,team:read'
+    "&scope=#{SCOPES.join(',')}"
   end
 end

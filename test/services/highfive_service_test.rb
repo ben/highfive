@@ -56,5 +56,12 @@ module HighfiveService
       assert_equal record.reason, 'foo bar baz'
       assert_equal record.amount, 20.00
     end
+
+    test 'with too large an amount' do
+      response = msg(USERONE, USERTWO, amount: 1000)
+      assert_equal 'ephemeral', response[:response_type]
+      assert_includes response[:text], 'too large'
+      assert_nil HighfiveRecord.last
+    end
   end
 end
