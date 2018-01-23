@@ -1,9 +1,13 @@
 class SlackController < ApplicationController
+  include SlackClient
+
   skip_before_action :verify_authenticity_token
   before_action :ssl_check, :verify_slack_token
   before_action :parse_command, only: :command
 
   def command
+    Rails.logger.info params
+    # Payload from Slack API:
     # {
     #   "token"=>"QPzHTgsdiAM54POxbTdu5evY",
     #   "team_id"=>"T0HAGP0J2",
@@ -16,12 +20,28 @@ class SlackController < ApplicationController
     #   "text"=>"@ben $50 for stuff",
     #   "response_url"=>"https://hooks.slack.com/commands/T0HAGP0J2/85579917141/ToVvZJbtRCua2FVFjPihSSmf"
     # }
-    highfive = HighfiveService::Highfive.new slack_team, params
-    highfive.commit!
-    render json: highfive.message
+    amount = nil
+    begin
+      amount = Integer(params[:amount])
+    rescue TypeError, ArgumentError
+    end
+    record = HighfiveRecord.create!(
+      state: 'initial',
+      slack_team: slack_team,
+      from: params[:user_id],
+      to: params[:target_user_id],
+      reason: params[:reason],
+      currency: 'USD',
+      amount: amount,
+      slack_response_url: params[:response_url],
+    )
+    highfive = HighfiveService::Highfive.new slack_team, record
+    render json: highfive.process!
+    # render json: highfive.message
   end
 
   def interact
+    # Payload from Slack API:
     # {
     #   "actions"=>[{"name"=>"confirm", "type"=>"button", "value"=>"yes"}],
     #   "callback_id"=>"66",
@@ -35,9 +55,11 @@ class SlackController < ApplicationController
     #   "is_app_unfurl"=>false,
     #   "response_url"=>"https://hooks.slack.com/actions/T2SLQPU2W/197985545363/RCqSzDbACOqeOvlj8o091dtd"
     # }
+    record = HighfiveRecord.find(@json['callback_id'])
+    highfive = HighfiveService::Highfive.new slack_team, record
     send_card = @json['actions'][0]['value'] === 'yes'
-    @record = HighfiveRecord.find(@json['callback_id'])
-    render json: send_card ? card_confirmed : card_canceled
+    render json: highfive.process!(send_card)
+    # render json: send_card ? card_confirmed : card_canceled
   end
 
   private
@@ -66,17 +88,18 @@ class SlackController < ApplicationController
 
   def verify_slack_token
     return if params[:token] == ENV['SLACK_VERIFICATION_TOKEN']
-    @json = JSON.parse(params[:payload] || '"{}"')
+    @json = JSON.parse(params[:payload] || '{}')
     return if @json['token'] == ENV['SLACK_VERIFICATION_TOKEN']
     head :unauthorized
   end
 
   def parse_command
+    command_regex = /@(\w+)(?:\s+\$(\S+))?(?:\s+for)?\s+(.*)/
     # TODO: help output
     return render(json: link) if /help|stats/.match params[:text]
-    m = /@(\w+)(?:\s+\$(\S+))?(?:\s+for)?\s+(.*)/.match params[:text]
+    m = command_regex.match params[:text]
     return render(json: usage) unless m
-    params[:target_user_id] = m[1]
+    params[:target_user_id] = slack_user_by_name(m[1]).id
     params[:amount] = m[2]
     params[:reason] = m[3]
   end
@@ -95,10 +118,5 @@ class SlackController < ApplicationController
 
   def post_to_response_url(payload)
     conn = Faraday.post(@record.slack_response_url, JSON.dump(payload))
-
-  end
-
-  def slack_team
-    SlackTeam.find_by_team_id params[:team_id]
   end
 end

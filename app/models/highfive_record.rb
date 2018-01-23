@@ -11,6 +11,11 @@ class HighfiveRecord < ApplicationRecord
     users_info.find { |x| x.id == to } || FakeSlack::UserInfo.new(to)
   end
 
+  def self.in_last_day
+    now = Time.now
+    where()
+  end
+
   private
 
   def users_info

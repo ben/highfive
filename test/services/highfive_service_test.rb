@@ -10,17 +10,20 @@ module HighfiveService
       mock_tango_api
     end
 
-    def msg(sender, recipient, reason: 'foo bar baz', amount: '', response_url: nil)
-      @highfive = Highfive.new(
-        slack_teams(:one),
-        user_id: sender.id,
-        target_user_id: recipient.id,
+    def msg(sender, recipient, reason: 'foo bar baz', amount: '', response_url: nil, team: :one)
+      slack_team = slack_teams(team)
+      @record = HighfiveRecord.new(
+        state: 'initial',
+        slack_team: slack_team,
+        from: sender.id,
+        to: recipient.id,
         reason: reason,
         amount: amount,
-        response_url: response_url
+        currency: 'USD',
+        slack_response_url: response_url
       )
-      @highfive.commit!
-      @highfive.message
+      @highfive = Highfive.new(slack_team, @record)
+      @highfive.process!
     end
 
     def card(*args)
@@ -42,7 +45,12 @@ module HighfiveService
 
     test 'highfiving yourself' do
       assert_includes msg(USERONE, USERONE)[:text], 'clapping'
-      assert_equal 0, HighfiveRecord.where(from: USERONE.id, to: USERONE.id).count
+      assert_equal 'invalid', @record.state
+    end
+
+    test 'with an amount but tango disabled' do
+      response = msg(USERONE, USERTWO, amount: 20, team: :two)
+      assert_includes response[:text], 'not enabled'
     end
 
     test 'with an amount' do
@@ -60,8 +68,8 @@ module HighfiveService
     test 'with too large an amount' do
       response = msg(USERONE, USERTWO, amount: 1000)
       assert_equal 'ephemeral', response[:response_type]
-      assert_includes response[:text], 'too large'
-      assert_nil HighfiveRecord.last
+      assert_includes response[:text], "can't send cards for more than $100."
+      assert_equal 'invalid', @record.state
     end
   end
 end
