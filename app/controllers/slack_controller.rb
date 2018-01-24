@@ -6,7 +6,6 @@ class SlackController < ApplicationController
   before_action :parse_command, only: :command
 
   def command
-    Rails.logger.info params
     # Payload from Slack API:
     # {
     #   "token"=>"QPzHTgsdiAM54POxbTdu5evY",
@@ -57,7 +56,7 @@ class SlackController < ApplicationController
     # }
     record = HighfiveRecord.find(@json['callback_id'])
     highfive = HighfiveService::Highfive.new slack_team, record
-    send_card = @json['actions'][0]['value'] === 'yes'
+    send_card = @json['actions'][0]['value'] == 'yes'
     render json: highfive.process!(send_card)
     # render json: send_card ? card_confirmed : card_canceled
   end

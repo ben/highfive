@@ -7,6 +7,6 @@ class SlackTeam < ApplicationRecord
 
   def daily_total
     records = HighfiveRecord.where(created_at: 24.hours.ago..Time.now)
-    records.reduce(0) { |sum,r| p sum,r; sum + (r.amount || 0) }
+    records.reduce(0) { |sum, r| sum + (r.amount || 0) }
   end
 end
