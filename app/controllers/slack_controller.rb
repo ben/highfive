@@ -34,7 +34,7 @@ class SlackController < ApplicationController
       amount: amount,
       slack_response_url: params[:response_url],
     )
-    highfive = HighfiveService::Highfive.new slack_team, record
+    highfive = HighfiveService::Highfive.new record
     render json: highfive.process!
     # render json: highfive.message
   end
@@ -55,7 +55,7 @@ class SlackController < ApplicationController
     #   "response_url"=>"https://hooks.slack.com/actions/T2SLQPU2W/197985545363/RCqSzDbACOqeOvlj8o091dtd"
     # }
     record = HighfiveRecord.find(@json['callback_id'])
-    highfive = HighfiveService::Highfive.new slack_team, record
+    highfive = HighfiveService::Highfive.new record
     send_card = @json['actions'][0]['value'] == 'yes'
     render json: highfive.process!(send_card)
     # render json: send_card ? card_confirmed : card_canceled

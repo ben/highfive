@@ -3,8 +3,8 @@ module HighfiveService
     include SlackClient
     include SlackRecordOwner
 
-    def initialize(slack_team, record)
-      @slack_team = slack_team
+    def initialize(record)
+      @slack_team = record.slack_team
       @record = record
     end
 

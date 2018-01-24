@@ -22,7 +22,7 @@ module HighfiveService
         currency: 'USD',
         slack_response_url: response_url
       )
-      @highfive = Highfive.new(slack_team, @record)
+      @highfive = Highfive.new(@record)
       @highfive.process!
     end
 
