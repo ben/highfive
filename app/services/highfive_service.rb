@@ -39,7 +39,12 @@ module HighfiveService
     end
 
     def process_confirmation(confirmed)
-      # TODO:
+      if (confirmed)
+        TangoCardJob.perform_later @record.id
+        return 'queued', SlackMessages.confirmed
+      else
+        return 'canceled', SlackMessages.canceled
+      end
     end
 
     def process_queued

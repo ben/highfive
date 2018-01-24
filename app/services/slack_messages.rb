@@ -29,6 +29,20 @@ class SlackMessages
     }
   end
 
+  def self.confirmed
+    {
+      response_type: 'ephemeral',
+      text: ':+1: On it!'
+    }
+  end
+
+  def self.canceled
+    {
+      response_type: 'ephemeral',
+      text: ':disappointed: ok'
+    }
+  end
+
   def self.no_self_five
     {
       response_type: 'ephemeral',
