@@ -99,10 +99,10 @@ class SlackMessages
     }
   end
 
-  def self.plus_one(response_type = 'ephemeral')
+  def self.funding_failed
     {
-      response_type: response_type,
-      text: ':+1:'
+      response_type: 'ephemeral',
+      text: "Whoops, I couldn't fund your account. Contact *(TODO)* to figure out what's up."
     }
   end
 

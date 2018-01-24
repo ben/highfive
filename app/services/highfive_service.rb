@@ -15,7 +15,7 @@ module HighfiveService
       when 'confirm'
         process_confirmation(input)
       when 'queued'
-        process_queued
+        process_queued(input)
       else
         Rails.logger.warn "Tried to process record #{@record.id} with state #{@record.state}"
         SlackMessages.error
@@ -47,8 +47,10 @@ module HighfiveService
       end
     end
 
-    def process_queued
-      # TODO:
+    def process_queued(input)
+      return 'failed', SlackMessages.funding_failed if input == :funding_failed
+      return 'failed', SlackMessages.sending_failed if input == :sending_failed
+      return 'sent', SlackMessages.success_gif(@record)
     end
 
     def success?

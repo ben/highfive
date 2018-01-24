@@ -1,12 +1,15 @@
 class TangoCardJob < ApplicationJob
   queue_as :default
-  include SlackClient
   include SlackRecordOwner
 
   def perform(record_id)
     @record = HighfiveRecord.find(record_id)
+    @highfive = HighfiveService::Highfive.new(@record)
 
-    fund_if_necessary
+    unless fund_if_necessary
+      post_response @highfive.process!(:funding_failed)
+      return
+    end
 
     sender_profile = slack_sender.profile
     recipient_profile = slack_recipient.profile
@@ -22,13 +25,14 @@ class TangoCardJob < ApplicationJob
 
     if resp['errors']
       puts "ERROR: Team #{slack_team.team_id} failed to send card: #{resp}"
+      post_response @highfive.process!(:failed_to_send)
     else
       puts "INFO: Team #{slack_team.team_id} card sent!"
       @record.update_attributes(
         tango_reference_order_id: resp['referenceOrderID'],
         card_code: resp['reward']['credentials']['Claim Code']
       )
-
+      post_response @highfive.process!(:sent)
       GoogleTracker.event category: 'highfive',
                           action: 'sent',
                           label: slack_team.id,
@@ -40,7 +44,7 @@ class TangoCardJob < ApplicationJob
     account_status = tango_client.get_account slack_team.tango_account_identifier
     balance = account_status['currentBalance']
     puts "INFO: Team #{slack_team.team_id} has #{balance} in their account"
-    return if balance >= @record.amount
+    return true if balance >= @record.amount
 
     fund_amount = (slack_team.award_limit || 150) * 5
     puts "INFO: Team #{slack_team.team_id} funding #{fund_amount}..."
@@ -52,9 +56,11 @@ class TangoCardJob < ApplicationJob
     )
 
     if resp['errors']
-      puts "ERROR: Team #{slack_team.team_id} failed to fund: #{resp}"
+      Rails.logger.error "ERROR: Team #{slack_team.team_id} failed to fund: #{resp}"
+      false
     else
-      puts "INFO: Team #{slack_team.team_id} funding succeeded!"
+      Rails.logger.info "INFO: Team #{slack_team.team_id} funding succeeded!"
+      true
     end
   end
 
@@ -66,6 +72,11 @@ class TangoCardJob < ApplicationJob
 
   def email_message
     "High five for ‘#{@record.reason.gsub(/[']/, '')}’"
+  end
+
+  def post_response(message)
+    # TODO: send this to the Slack API via @record.slack_response_url
+    pp message
   end
 
 end
