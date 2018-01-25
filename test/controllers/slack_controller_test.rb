@@ -22,7 +22,7 @@ class SlackControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'slack token check for interaction' do
-    post '/slack/command', params: {
+    post '/slack/interact', params: {
       payload: JSON.dump(token: 'not a match')
     }
     assert_response :unauthorized

@@ -21,4 +21,18 @@ class ApplicationController < ActionController::Base
     "&redirect_uri=#{ENV['HOSTNAME']}#{url_for '/slack_auth'}" \
     "&scope=#{SCOPES.join(',')}"
   end
+
+  def slack_team_id
+    params[:team_id]
+  end
+
+  def slack_team
+    SlackTeam.find_by_team_id slack_team_id
+  end
+
+  def slack_users_list
+    @slack_users_list ||= Rails.cache.fetch("slack/#{slack_team_id}/users", expires_in: 1.minutes) do
+      slack_client(team_id: slack_team_id).users_list.members
+    end
+  end
 end

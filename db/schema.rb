@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170105044622) do
+ActiveRecord::Schema.define(version: 20180120221024) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,6 +27,7 @@ ActiveRecord::Schema.define(version: 20170105044622) do
     t.datetime "updated_at",               null: false
     t.string   "slack_response_url"
     t.string   "tango_reference_order_id"
+    t.string   "state"
     t.index ["slack_team_id"], name: "index_highfive_records_on_slack_team_id", using: :btree
   end
 

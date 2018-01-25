@@ -7,7 +7,13 @@
 one:
   team_id: 'teamone'
   access_token: 'tokenone'
+  award_limit: 100
+  daily_limit: 300
+  tango_customer_identifier: 'customer'
+  tango_account_identifier: 'account'
 
 two:
   team_id: 'teamtwo'
   access_token: 'tokentwo'
+  award_limit: 100
+  daily_limit: 300

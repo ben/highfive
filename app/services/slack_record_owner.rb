@@ -1,7 +1,6 @@
+# Assumes exisntence of @record
 module SlackRecordOwner
-  def slack_users_list
-    @slack_users_list ||= slack_client(team_id: slack_team.team_id).users_list.members
-  end
+  include SlackClient
 
   def slack_sender
     slack_users_list.find { |u| @record.from == u.id }

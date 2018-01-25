@@ -40,7 +40,7 @@ set :default_env, { rvm_bin_path: '~/.rvm/bin' }
 # Load custom tasks from `lib/capistrano/tasks` if you have any defined
 Dir.glob('lib/capistrano/tasks/*.rake').each { |r| import r }
 
-set :rvm_ruby_version, '2.3.1'
+set :rvm_ruby_version, '2.5.0'
 
 # set :bundle_gemfile, -> { release_path.join('Gemfile') }
 # set :bundle_dir, -> { shared_path.join('bundle') }

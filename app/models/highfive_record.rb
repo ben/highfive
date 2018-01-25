@@ -3,6 +3,9 @@ class HighfiveRecord < ApplicationRecord
   attr_accessor :slack_users_info
   include SlackClient
 
+  scope :in_last_day, -> { where('created_at > ?', Time.now - 24.hours) }
+  scope :sent, -> { where(state: 'sent') }
+
   def slack_from
     users_info.find { |x| x.id == from } || FakeSlack::UserInfo.new(from)
   end
