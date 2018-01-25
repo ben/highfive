@@ -75,8 +75,7 @@ class TangoCardJob < ApplicationJob
   end
 
   def post_response(message)
-    # TODO: send this to the Slack API via @record.slack_response_url
-    pp message
+    conn = Faraday.post(@record.slack_response_url, JSON.dump(message))
   end
 
 end

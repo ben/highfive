@@ -115,7 +115,4 @@ class SlackController < ApplicationController
     }
   end
 
-  def post_to_response_url(payload)
-    conn = Faraday.post(@record.slack_response_url, JSON.dump(payload))
-  end
 end
