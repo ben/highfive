@@ -55,6 +55,8 @@ class TangoCardJob < ApplicationJob
       fund_amount
     )
 
+    # TODO: record funding attempt in the db
+
     if resp['errors']
       Rails.logger.error "ERROR: Team #{slack_team.team_id} failed to fund: #{resp}"
       false

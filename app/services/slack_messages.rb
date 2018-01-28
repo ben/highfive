@@ -106,6 +106,35 @@ class SlackMessages
     }
   end
 
+  def self.unrecognized
+    {
+      response_type: 'ephemeral',
+      text: "Hmm, I couldn't understand that. Try `/highfive @user for (reason)`."
+    }
+  end
+
+  def self.usage(cards_enabled = false)
+    card_suffix ="\nTo include a gift card, do `/highfive @user $5 for (reason)`." if cards_enabled else ''
+    {
+      response_type: 'ephemeral',
+      text: "To send a highfive, use `/highfive @user for (reason)`.#{card_suffix}"
+    }
+  end
+
+  def self.stats_link
+    {
+      response_type: 'ephemeral',
+      text: "Visit the <#{ENV['HOSTNAME']}/admin|Highfive site> for info on your team's activity."
+    }
+  end
+
+  def self.help
+    {
+      response_type: 'ephemeral',
+      text: "Visit the <#{ENV['HOSTNAME']}/admin|Highfive site> for info on your team's activity."
+    }
+  end
+
   GIFS = [
     'http://i.giphy.com/zl170rmVMCpEY.gif',
     'http://i.giphy.com/yoJC2vEwxkwbMZmSCk.gif',

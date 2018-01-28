@@ -94,25 +94,15 @@ class SlackController < ApplicationController
 
   def parse_command
     command_regex = /@(\w+)(?:\s+\$(\S+))?(?:\s+for)?\s+(.*)/
+    cards_enabled = slack_team.tangocard?
     # TODO: help output
-    return render(json: link) if /help|stats/.match params[:text]
+    return render(json: SlackMessages.usage(cards_enabled)) if params[:text].chomp.downcase == 'help'
+    return render(json: SlackMessages.stats_link) if params[:text].chomp.downcase == 'stats'
     m = command_regex.match params[:text]
-    return render(json: usage) unless m
+    return render(json: SlackMessages.unrecognized) unless m
     params[:target_user_id] = slack_user_by_name(m[1]).id
     params[:amount] = m[2]
     params[:reason] = m[3]
-  end
-
-  def usage
-    {
-      text: "Hmm, I couldn't understand that. Try `/highfive @user for (reason)`."
-    }
-  end
-
-  def link
-    {
-      text: "Visit the <#{ENV['HOSTNAME']}/admin|Highfive site> for info on your team's activity."
-    }
   end
 
 end

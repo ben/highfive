@@ -2,7 +2,7 @@ class SlackTeam < ApplicationRecord
   has_many :highfive_records
 
   def tangocard?
-    !!(tango_customer_identifier && tango_account_identifier)
+    tango_customer_identifier.present? && tango_account_identifier.present?
   end
 
   def daily_total
