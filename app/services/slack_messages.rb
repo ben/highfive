@@ -100,6 +100,7 @@ class SlackMessages
   end
 
   def self.funding_failed
+    # TODO: give admin contact info
     {
       response_type: 'ephemeral',
       text: "Whoops, I couldn't fund your account. Contact *(TODO)* to figure out what's up."

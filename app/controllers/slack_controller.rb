@@ -95,7 +95,6 @@ class SlackController < ApplicationController
   def parse_command
     command_regex = /@(\w+)(?:\s+\$(\S+))?(?:\s+for)?\s+(.*)/
     cards_enabled = slack_team.tangocard?
-    # TODO: help output
     return render(json: SlackMessages.usage(cards_enabled)) if params[:text].chomp.downcase == 'help'
     return render(json: SlackMessages.stats_link) if params[:text].chomp.downcase == 'stats'
     m = command_regex.match params[:text]
