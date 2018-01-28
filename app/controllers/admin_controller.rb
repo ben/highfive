@@ -9,6 +9,9 @@ class AdminController < ApplicationController
     respond_to do |format|
       format.html
       format.csv { send_data @records.to_csv, filename: "highfives-#{Date.today}.csv" }
+      format.xlsx {
+        response.headers['Content-Disposition'] = "attachment; filename=\"highfives-#{Date.today}.xlsx\""
+      }
     end
   end
 

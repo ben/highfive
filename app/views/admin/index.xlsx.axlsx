@@ -1,0 +1,13 @@
+wb = xlsx_package.workbook
+wb.add_worksheet(name: "sheet1") do |sheet|
+  sheet.add_row ['date', 'from', 'to', 'reason', 'amount']
+  @records.each do |r|
+    sheet.add_row [
+      r.created_at.utc,
+      r.slack_from.profile.email,
+      r.slack_to.profile.email,
+      r.reason,
+      r.amount || '',
+    ]
+  end
+end
