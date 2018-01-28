@@ -47,7 +47,9 @@
               <%= name_fallback record.slack_to %>
             <% end %>
           </td>
-          <td><%= record.reason %></td>
+          <td>
+            <span title="<%= record.reason %>"><%= record.reason.truncate(50, separator: ' ') %></span>
+          </td>
           <td><%= record.amount&.to_s(:currency) || '—' %></td>
           <td><%= record.card_code ? '<em>REDACTED</em>'.html_safe : '—' %></td>
         </tr>
