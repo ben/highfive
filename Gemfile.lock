@@ -292,7 +292,6 @@ DEPENDENCIES
   spring-watcher-listen (~> 2.0.0)
   staccato
   turbolinks (~> 5)
-  tzinfo-data
   uglifier (>= 1.3.0)
   web-console
   webmock

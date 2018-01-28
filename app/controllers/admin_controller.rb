@@ -5,6 +5,11 @@ class AdminController < ApplicationController
   def index
     @records = current_team.highfive_records.sent.order(created_at: 'DESC').paginate(page: params[:page], per_page: 30)
     @records.each { |r| r.slack_users_info = slack_users_info }
+
+    respond_to do |format|
+      format.html
+      format.csv { send_data @records.to_csv, filename: "highfives-#{Date.today}.csv" }
+    end
   end
 
   def configuration

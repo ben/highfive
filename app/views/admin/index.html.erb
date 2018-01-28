@@ -39,12 +39,12 @@
           </td>
           <td>
             <%= link_to "slack://user?team=#{current_team.team_id}&id=#{record.from}" do %>
-              <%= name_fallback record.slack_from %>
+              <%= record.from_name %>
             <% end %>
           </td>
           <td>
             <%= link_to "slack://user?team=#{current_team.team_id}&id=#{record.to}" do %>
-              <%= name_fallback record.slack_to %>
+              <%= record.to_name %>
             <% end %>
           </td>
           <td>
