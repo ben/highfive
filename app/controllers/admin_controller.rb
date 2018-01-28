@@ -3,7 +3,7 @@ class AdminController < ApplicationController
   before_action :requires_login, :fetch_tangocard_info
 
   def index
-    @records = current_team.highfive_records.sent.order(created_at: 'DESC')
+    @records = current_team.highfive_records.sent.order(created_at: 'DESC').paginate(page: params[:page], per_page: 30)
     @records.each { |r| r.slack_users_info = slack_users_info }
   end
 

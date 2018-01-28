@@ -37,6 +37,7 @@ gem 'sinatra', '2.0.0'
 gem 'resque'
 gem 'foreman'
 gem 'dotenv-rails', require: 'dotenv/rails-now'
+gem 'will_paginate'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
