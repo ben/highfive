@@ -12,6 +12,11 @@
 </div>
 <% end %>
 
+<p class="pull-right">
+  Download:
+    <%= link_to 'CSV', admin_index_path(format: :csv) %> |
+    <%= link_to 'XLSX', admin_index_path(format: :xlsx) %>
+</p>
 <% if @tango_account %>
 <p>
   Current Tangocard account balance: <strong><%= @tango_account['currentBalance'].to_s(:currency) %></strong>
