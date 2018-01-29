@@ -5,6 +5,7 @@ class AdminController < ApplicationController
   def index
     @records = current_team.highfive_records.sent.order(created_at: 'DESC').paginate(page: params[:page], per_page: 30)
     @records.each { |r| r.slack_users_info = slack_users_info }
+    @fundings = current_team.fundings.order(created_at:' DESC').paginate(page: params[:funding_page], per_page: 30)
 
     respond_to do |format|
       format.html

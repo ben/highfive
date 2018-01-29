@@ -62,3 +62,29 @@
   </table>
   <%= will_paginate @records %>
 </div>
+
+<div class="clear-right table-responsive">
+  <table class="table table-striped">
+    <thead>
+      <th>Date</th>
+      <th>Amount</th>
+      <th>Result</th>
+    </thead>
+    <tbody>
+      <% @fundings.each do |funding| %>
+      <tr>
+          <td>
+            <time datetime="<%= funding.created_at.to_datetime %>">
+              <span class="timestring"><%= funding.created_at %></span>
+            </time>
+          </td>
+        <td><%= funding.amount.to_s(:currency) %></td>
+        <td>
+          <%= funding.succeeded? ? 'Success!' : "Failed: #{funding.error}"%>
+        </td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%= will_paginate @fundings %>
+</div>
