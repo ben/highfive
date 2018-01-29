@@ -115,7 +115,7 @@ class SlackMessages
   end
 
   def self.usage(cards_enabled = false)
-    card_suffix ="\nTo include a gift card, do `/highfive @user $5 for (reason)`." if cards_enabled else ''
+    card_suffix = cards_enabled ? "\nTo include a gift card, do `/highfive @user $5 for (reason)`." : ''
     {
       response_type: 'ephemeral',
       text: "To send a highfive, use `/highfive @user for (reason)`.#{card_suffix}"
