@@ -1,1 +1,1 @@
-cap production deploy foreman:export foreman:restart
+bundle exec cap production deploy foreman:export foreman:restart
