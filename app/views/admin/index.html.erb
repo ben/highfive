@@ -37,7 +37,6 @@
       <% @records.each do |record| %>
         <tr>
           <td>
-            <%# TODO: link to transcript https://highfive-chat.slack.com/archives/C2SLJPMRD/p1497900909513679 %>
             <time datetime="<%= record.created_at.to_datetime %>">
               <span class="timestring"><%= record.created_at %></span>
             </time>
