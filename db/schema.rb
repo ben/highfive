@@ -15,37 +15,37 @@ ActiveRecord::Schema.define(version: 20180120221024) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "highfive_records", force: :cascade do |t|
-    t.integer  "slack_team_id"
-    t.string   "from"
-    t.string   "to"
-    t.string   "reason"
-    t.string   "currency"
-    t.float    "amount"
-    t.string   "card_code"
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
-    t.string   "slack_response_url"
-    t.string   "tango_reference_order_id"
-    t.string   "state"
-    t.index ["slack_team_id"], name: "index_highfive_records_on_slack_team_id", using: :btree
+  create_table "highfive_records", id: :serial, force: :cascade do |t|
+    t.integer "slack_team_id"
+    t.string "from"
+    t.string "to"
+    t.string "reason"
+    t.string "currency"
+    t.float "amount"
+    t.string "card_code"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "slack_response_url"
+    t.string "tango_reference_order_id"
+    t.string "state"
+    t.index ["slack_team_id"], name: "index_highfive_records_on_slack_team_id"
   end
 
-  create_table "slack_teams", force: :cascade do |t|
-    t.string   "team_id"
-    t.string   "access_token"
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
-    t.string   "tango_customer_identifier"
-    t.string   "tango_account_identifier"
-    t.string   "tango_card_token"
-    t.string   "team_name"
-    t.string   "team_subdomain"
-    t.integer  "award_limit"
-    t.integer  "daily_limit"
-    t.integer  "double_rate"
-    t.integer  "boomerang_rate"
-    t.index ["team_id"], name: "index_slack_teams_on_team_id", unique: true, using: :btree
+  create_table "slack_teams", id: :serial, force: :cascade do |t|
+    t.string "team_id"
+    t.string "access_token"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "tango_customer_identifier"
+    t.string "tango_account_identifier"
+    t.string "tango_card_token"
+    t.string "team_name"
+    t.string "team_subdomain"
+    t.integer "award_limit"
+    t.integer "daily_limit"
+    t.integer "double_rate"
+    t.integer "boomerang_rate"
+    t.index ["team_id"], name: "index_slack_teams_on_team_id", unique: true
   end
 
   add_foreign_key "highfive_records", "slack_teams"
