@@ -44,7 +44,8 @@ class SlackControllerTest < ActionDispatch::IntegrationTest
     post '/slack/command', params: {
       token: ENV['SLACK_VERIFICATION_TOKEN'],
       user_id: 'userid',
-      text: 'what is this thing'
+      text: 'what is this thing',
+      team_id: slack_teams(:one).team_id,
     }
     assert_includes [nil, 'ephemeral'], body['response_type']
     assert_includes body['text'], '`/highfive @user for (reason)`'
@@ -55,7 +56,8 @@ class SlackControllerTest < ActionDispatch::IntegrationTest
       post '/slack/command', params: {
         token: ENV['SLACK_VERIFICATION_TOKEN'],
         user_id: 'userid',
-        text: 'stats'
+        text: 'stats',
+        team_id: slack_teams(:one).team_id,
       }
       assert_includes [nil, 'ephemeral'], body['response_type']
       assert_includes body['text'], '/admin'
