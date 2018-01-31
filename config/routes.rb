@@ -8,6 +8,9 @@ Rails.application.routes.draw do
     collection do
       get :configuration
       get :login
+      get :highfives
+      get :fundings
+
       resource :tangocard, only: [] do
         member do
           post :enable
