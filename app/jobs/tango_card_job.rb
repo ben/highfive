@@ -54,14 +54,15 @@ class TangoCardJob < ApplicationJob
       slack_team.tango_card_token,
       fund_amount
     )
+    pp resp
 
     Funding.create!(
       slack_team: slack_team,
       highfive_record: @record,
-      amount: resp['amount'],
+      amount: fund_amount,
       succeeded: resp['success'],
       fund_id: resp['fund_id'],
-      error: resp['success'] ? nil : "#{resp['denial_code']} / #{resp['denial_message']}"
+      error: resp['success'] ? nil : resp['errors']
     )
 
     if resp['errors']
