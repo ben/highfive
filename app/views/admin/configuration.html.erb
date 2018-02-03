@@ -98,9 +98,10 @@
           </div>
         </div>
         <%= form.text_field :award_limit, prepend: '$', append: '.00', help: 'No single high-five can award more than this dollar amount.' %>
-        <%= form.text_field :daily_limit, prepend: '$', append: '.00', help: 'No user can award more than this dollar amount in a single day.' %>
+        <%= form.text_field :daily_limit, prepend: '$', append: '.00', help: 'Limit for total dollars sent in a 24-hour period.' %>
         <%#= form.text_field :double_rate, append: '%', help: "Sometimes, just for fun, we'll double a high-five gift card amount." %>
         <%#= form.text_field :boomerang_rate, append: '%', help: 'Probability of the giver receiving an equal gift card to what they sent.' %>
+        <%# TODO: automatic funding & how much, manual funding, current balance %>
         <%= form.form_group do %>
           <%= form.primary 'Save settings' %>
         <% end %>
