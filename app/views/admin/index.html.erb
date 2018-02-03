@@ -98,9 +98,10 @@
             <% if funding.succeeded? %>
               <span class="label label-success">Success</span>
             <% else %>
-              <span class="label label-danger">Failed: <%= funding.error %></span>
+              <span class="label label-danger">Failed</span>
             <% end %>
           </td>
+          <%# TODO: expando with pre/code payload %>
         </tr>
         <% end %>
       </tbody>

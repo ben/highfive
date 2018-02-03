@@ -19,9 +19,7 @@ ActiveRecord::Schema.define(version: 20180129004249) do
     t.bigint "slack_team_id"
     t.bigint "highfive_record_id"
     t.integer "amount"
-    t.boolean "succeeded"
-    t.string "fund_id"
-    t.string "error"
+    t.string "payload"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["highfive_record_id"], name: "index_fundings_on_highfive_record_id"

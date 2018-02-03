@@ -60,9 +60,7 @@ class TangoCardJob < ApplicationJob
       slack_team: slack_team,
       highfive_record: @record,
       amount: fund_amount,
-      succeeded: resp['success'],
-      fund_id: resp['fund_id'],
-      error: resp['success'] ? nil : resp['errors']
+      payload: resp
     )
 
     if resp['errors']
