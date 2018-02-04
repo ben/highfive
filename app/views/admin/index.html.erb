@@ -78,34 +78,28 @@
 <% if @fundings.empty? %>
 <p>No attempts to fund your account.</p>
 <% else %>
-  <div class="clear-right table-responsive">
-    <table class="table table-striped">
-      <thead>
-        <th>Date</th>
-        <th>Amount</th>
-        <th>Result</th>
-      </thead>
-      <tbody>
-        <% @fundings.each do |funding| %>
-        <tr>
-            <td>
-              <time datetime="<%= funding.created_at.to_datetime %>">
-                <span class="timestring"><%= funding.created_at %></span>
-              </time>
-            </td>
-          <td><%= funding.amount.to_s(:currency) %></td>
-          <td>
-            <% if funding.succeeded? %>
-              <span class="label label-success">Success</span>
-            <% else %>
-              <span class="label label-danger">Failed</span>
-            <% end %>
-          </td>
-          <%# TODO: expando with pre/code payload %>
-        </tr>
-        <% end %>
-      </tbody>
-    </table>
+  <% @fundings.each do |funding| %>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title" data-toggle="collapse" href="#funding_<%= funding.id %>">
+          <% if funding.succeeded? %>
+            <span class="label label-success">Success</span>
+          <% else %>
+            <span class="label label-danger">Failed</span>
+          <% end %>
+          <%= funding.amount.to_s(:currency) %>
+          ,
+          <span class="timestring"><%= funding.created_at %></span>
+        </h4>
+      </div>
+      <div class="panel-collapse collapse" id="funding_<%= funding.id %>">
+        <div class="panel-body">
+          <pre><code><%= JSON.pretty_generate(JSON.parse(funding.payload)) %></code></pre>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
   <div class="pagination pull-right"><%= page_entries_info @fundings, model: 'funding events' %></div>
   <%= will_paginate @fundings, param_name: 'fundings_page' %>
   </div>
