@@ -1,10 +1,9 @@
 require 'test_helper'
 
-describe HighfiveRecord do
+describe Funding do
   describe :to_csv do
     before do
-      mock_users_list
-      @csv_lines = HighfiveRecord.all.to_csv.split("\n")
+      @csv_lines = Funding.all.to_csv.split("\n")
     end
 
     it 'has a header line' do
@@ -12,7 +11,7 @@ describe HighfiveRecord do
     end
 
     it 'outputs the records' do
-      @csv_lines[1].must_match /dunno,\$20/
+      @csv_lines[1].must_match /1,true/
       end
   end
 end

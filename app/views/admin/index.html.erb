@@ -12,16 +12,19 @@
 </div>
 <% end %>
 
-<p class="pull-right">
-  Download:
-    <%= link_to 'CSV', admin_index_path(format: :csv) %> |
-    <%= link_to 'XLSX', admin_index_path(format: :xlsx) %>
-</p>
 <% if @tango_account %>
 <p>
   Current Tangocard account balance: <strong><%= @tango_account['currentBalance'].to_s(:currency) %></strong>
 </p>
 <% end %>
+
+<hr />
+<p class="pull-right">
+  Download:
+    <%= link_to 'CSV', highfives_admin_index_path(format: :csv) %> |
+    <%= link_to 'XLSX', highfives_admin_index_path(format: :xlsx) %>
+</p>
+<h3>Highfives</h3>
 
 <div class="clear-right table-responsive">
   <table class="table table-striped">
@@ -60,5 +63,44 @@
       <% end %>
     </tbody>
   </table>
-  <%= will_paginate @records %>
+  <div class="pagination pull-right"><%= page_entries_info @records, model: 'highfives' %></div>
+  <%= will_paginate @records, param_name: 'highfives_page' %>
 </div>
+
+<hr />
+<p class="pull-right">
+  Download:
+    <%= link_to 'CSV', fundings_admin_index_path(format: :csv) %> |
+    <%= link_to 'XLSX', fundings_admin_index_path(format: :xlsx) %>
+</p>
+<h3>Funding events</h3>
+
+<% if @fundings.empty? %>
+<p>No attempts to fund your account.</p>
+<% else %>
+  <% @fundings.each do |funding| %>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title" data-toggle="collapse" href="#funding_<%= funding.id %>">
+          <% if funding.succeeded? %>
+            <span class="label label-success">Success</span>
+          <% else %>
+            <span class="label label-danger">Failed</span>
+          <% end %>
+          <%= funding.amount.to_s(:currency) %>
+          ,
+          <span class="timestring"><%= funding.created_at %></span>
+        </h4>
+      </div>
+      <div class="panel-collapse collapse" id="funding_<%= funding.id %>">
+        <div class="panel-body">
+          <pre><code><%= JSON.pretty_generate(JSON.parse(funding.payload)) %></code></pre>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="pagination pull-right"><%= page_entries_info @fundings, model: 'funding events' %></div>
+  <%= will_paginate @fundings, param_name: 'fundings_page' %>
+  </div>
+<% end %>

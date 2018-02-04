@@ -68,10 +68,10 @@ class TangocardsController < ApplicationController
 
   def settings_params(params)
     params = params.require(:slack_team).permit(:award_limit, :daily_limit, :double_rate, :boomerang_rate)
-    [:double_rate, :boomerang_rate].each do |key|
-      # clamp to [0,100]
-      params[key] = [0, Integer(params[key]), 100].sort[1]
-    end
+    # [:double_rate, :boomerang_rate].each do |key|
+    #   # clamp to [0,100]
+    #   params[key] = [0, Integer(params[key]), 100].sort[1]
+    # end
     params
   end
 end

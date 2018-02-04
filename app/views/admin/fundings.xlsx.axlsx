@@ -1,0 +1,13 @@
+wb = xlsx_package.workbook
+wb.add_worksheet(name: "sheet1") do |sheet|
+  sheet.add_row ['date', 'amount', 'success', 'tangocard id', 'error']
+  @fundings.each do |f|
+    sheet.add_row [
+      f.created_at.utc,
+      f.amount,
+      f.succeeded,
+      f.fund_id,
+      f.error
+    ]
+  end
+end

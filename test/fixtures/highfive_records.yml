@@ -4,8 +4,26 @@
 # model remove the '{}' from the fixture names and add the columns immediately
 # below each fixture, per the syntax in the comments below
 #
-one: {}
-# column: value
-#
-two: {}
-# column: value
+one:
+  slack_team: one
+  from: 'U12345'
+  to: 'U23456'
+  reason: 'dunno'
+  currency: 'USD'
+  amount: 20.0
+  slack_response_url: 'https://example.com'
+  tango_reference_order_id: nil
+  card_code: nil
+  state: queued
+
+two:
+  slack_team: two
+  from: 'U23456'
+  to: 'U12345'
+  reason: 'whatever'
+  currency: 'USD'
+  amount: 15.0
+  slack_response_url: 'https://example.com'
+  tango_reference_order_id: 'order-123'
+  card_code: '123-456-789'
+  state: sent

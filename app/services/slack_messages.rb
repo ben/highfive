@@ -81,7 +81,8 @@ class SlackMessages
   def self.over_daily_limit(record, team)
     {
       response_type: 'ephemeral',
-      text: "The daily limit for gift cards is #{team.daily_limit.to_s(:currency)}, and the total so far is #{team.daily_total.format(:currency)}."
+      text: "The daily limit for gift cards is #{team.daily_limit.to_s(:currency)}, and " \
+            "#{team.daily_total.to_s(:currency)} has been sent out in the last 24 hours. Sorry :shrug:"
     }
   end
 

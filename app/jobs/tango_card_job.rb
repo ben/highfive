@@ -54,8 +54,14 @@ class TangoCardJob < ApplicationJob
       slack_team.tango_card_token,
       fund_amount
     )
+    pp resp
 
-    # TODO: record funding attempt in the db
+    Funding.create!(
+      slack_team: slack_team,
+      highfive_record: @record,
+      amount: fund_amount,
+      payload: resp.to_json
+    )
 
     if resp['errors']
       Rails.logger.error "ERROR: Team #{slack_team.team_id} failed to fund: #{resp}"

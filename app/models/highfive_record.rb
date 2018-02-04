@@ -1,5 +1,6 @@
 class HighfiveRecord < ApplicationRecord
   belongs_to :slack_team
+  has_one :funding
   attr_accessor :slack_users_info
   include SlackClient
 

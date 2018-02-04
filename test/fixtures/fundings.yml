@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  slack_team: one
+  highfive_record: one
+  amount: 1
+  payload: '{"status": "SUCCESS"}'
+
+two:
+  slack_team: one
+  highfive_record: two
+  amount: 10
+  payload: '{"status": "FAILURE"}'
