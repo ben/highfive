@@ -60,7 +60,7 @@ class TangoCardJob < ApplicationJob
       slack_team: slack_team,
       highfive_record: @record,
       amount: fund_amount,
-      payload: resp
+      payload: resp.to_json
     )
 
     if resp['errors']

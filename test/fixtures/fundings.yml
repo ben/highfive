@@ -1,13 +1,13 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
+  slack_team: one
+  highfive_record: one
   amount: 1
-  succeeded: true
-  fund_id: 'abc-123'
-  error: nil
+  payload: '{"status": "SUCCESS"}'
 
 two:
-  amount: 2
-  succeeded: false
-  fund_id: 'abc-789'
-  error: 'something bad happened'
+  slack_team: one
+  highfive_record: two
+  amount: 10
+  payload: '{"status": "FAILURE"}'
