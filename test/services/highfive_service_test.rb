@@ -6,7 +6,7 @@ module HighfiveService
     fixtures :slack_teams
 
     setup do
-      mock_users_list
+      stub_slack_client
       mock_tango_api
     end
 

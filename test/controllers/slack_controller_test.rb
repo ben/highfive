@@ -6,7 +6,7 @@ class SlackControllerTest < ActionDispatch::IntegrationTest
   end
 
   setup do
-    mock_users_list
+    stub_slack_client
   end
 
   test 'ssl check' do

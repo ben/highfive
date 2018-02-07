@@ -29,14 +29,6 @@ end
 USERONE = FakeUser.new 'useroneid', 'userone'
 USERTWO = FakeUser.new 'usertwoid', 'usertwo'
 
-def mock_users_list
-  Slack::Web::Client
-    .any_instance
-    .expects(:users_list)
-    .at_least(0)
-    .returns(members: [USERONE, USERTWO])
-end
-
 def mock_tango_api(balance: 200)
   @current_balance = balance
   stub_request(:get, 'http://example.com/accounts/')
@@ -59,6 +51,18 @@ def mock_tango_api(balance: 200)
         }.to_json
       }
     end
+end
+
+def stub_slack_client
+  Slack::Web::Client.any_instance
+    .expects(:oauth_access).at_least(0)
+    .returns(user: {id: 'U123'}, team: {id: 'T123'})
+  Slack::Web::Client.any_instance
+    .expects(:team_info).at_least(0)
+    .returns(team: {domain: 'subdomain', name: 'team name'})
+  Slack::Web::Client.any_instance
+    .expects(:users_list).at_least(0)
+    .returns(members: [USERONE, USERTWO])
 end
 
 class ActiveSupport::TestCase
