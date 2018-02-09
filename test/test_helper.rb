@@ -26,31 +26,54 @@ class FakeUser
   end
 end
 
-USERONE = FakeUser.new 'useroneid', 'userone'
-USERTWO = FakeUser.new 'usertwoid', 'usertwo'
+USERONE = FakeUser.new 'U12345', 'userone'
+USERTWO = FakeUser.new 'U23456', 'usertwo'
+TANGO_ROOT = ENV['TANGOCARD_ROOTURL'] || 'http://example.com'
 
 def mock_tango_api(balance: 200)
   @current_balance = balance
-  stub_request(:get, 'http://example.com/accounts/')
+  stub_request(:get, /#{TANGO_ROOT}\/accounts\/.*/)
     .to_return(body: { currentBalance: @current_balance }.to_json)
-  stub_request(:post, 'http://example.com/creditCardDeposits')
+
+  stub_request(:post, /#{TANGO_ROOT}\/creditCardDeposits/)
     .to_return do |request|
       body = JSON.parse(request.body)
       @current_balance += body['amount']
       { body: { ok: true }.to_json }
     end
 
-  stub_request(:post, 'http://example.com/orders')
+  stub_request(:post, "#{TANGO_ROOT}/orders")
     .to_return do |request|
       body = JSON.parse(request.body)
       @current_balance -= body['amount']
       {
         body: {
           ok: true,
-          amountCharged: { total: body['amount'] }
+          amountCharged: { total: body['amount'] },
+          referenceOrderId: 'abc-123',
+          reward: {credentials: {'Claim Code' => 'xyz748'}}
         }.to_json
       }
     end
+
+  stub_request(:post, "#{TANGO_ROOT}/creditCardDeposits")
+    .to_return do |request|
+      body = JSON.parse(request.body)
+      @current_balance += body['amount']
+      {
+        body: {
+          status: 'SUCCESS',
+        }.to_json
+      }
+    end
+end
+
+def assert_tango_api_requested(method, endpoint)
+  assert_requested method, "#{TANGO_ROOT}#{endpoint}"
+end
+
+def refute_tango_api_requested(method, endpoint)
+  refute_requested method, "#{TANGO_ROOT}#{endpoint}"
 end
 
 def stub_slack_client
