@@ -108,6 +108,14 @@ class SlackMessages
     }
   end
 
+  def self.sending_failed
+    # TODO: give admin contact info
+    {
+      response_type: 'ephemeral',
+      text: "Whoops, I couldn't send your card. Contact *(TODO)* to figure out what's up."
+    }
+  end
+
   def self.unrecognized
     {
       response_type: 'ephemeral',
