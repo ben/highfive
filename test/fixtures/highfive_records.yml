@@ -11,7 +11,7 @@ one:
   reason: 'dunno'
   currency: 'USD'
   amount: 20.0
-  slack_response_url: 'https://example.com'
+  slack_response_url: 'https://example.com/slack_response/123'
   tango_reference_order_id: nil
   card_code: nil
   state: queued
@@ -23,7 +23,7 @@ two:
   reason: 'whatever'
   currency: 'USD'
   amount: 15.0
-  slack_response_url: 'https://example.com'
+  slack_response_url: 'https://example.com/slack_response/124'
   tango_reference_order_id: 'order-123'
   card_code: '123-456-789'
   state: sent

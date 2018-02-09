@@ -6,7 +6,7 @@ class SlackControllerTest < ActionDispatch::IntegrationTest
   end
 
   setup do
-    mock_users_list
+    stub_slack_client
   end
 
   test 'ssl check' do
@@ -31,13 +31,13 @@ class SlackControllerTest < ActionDispatch::IntegrationTest
   test 'happy path for command' do
     post '/slack/command', params: {
       token: ENV['SLACK_VERIFICATION_TOKEN'],
-      user_id: 'useroneid',
+      user_id: 'U12345',
       text: '@usertwo for bar',
       team_id: slack_teams(:one).team_id
     }
     assert_equal 'in_channel', body['response_type']
     assert_includes body['text'], '<!channel>'
-    assert_includes body['text'], '<@usertwoid>'
+    assert_includes body['text'], '<@U23456>'
   end
 
   test 'badly formatted command' do

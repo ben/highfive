@@ -48,6 +48,9 @@ group :development, :test do
   gem 'minitest-spec-rails'
   gem 'webmock'
   gem 'mocha'
+  gem 'guard'
+  gem 'guard-minitest'
+  gem 'rb-readline'
 end
 
 group :development do

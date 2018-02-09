@@ -3,7 +3,7 @@ require 'test_helper'
 describe HighfiveRecord do
   describe :to_csv do
     before do
-      mock_users_list
+      stub_slack_client
       @csv_lines = HighfiveRecord.all.to_csv.split("\n")
     end
 
