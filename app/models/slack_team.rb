@@ -1,6 +1,6 @@
 class SlackTeam < ApplicationRecord
   has_many :highfive_records
-  has_many :fundings, dependent: :destroy
+  has_many :fundings
 
   def tangocard?
     tango_customer_identifier.present? && tango_account_identifier.present?
