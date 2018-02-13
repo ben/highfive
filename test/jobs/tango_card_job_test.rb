@@ -18,6 +18,10 @@ describe TangoCardJob do
       assert_tango_api_requested :post, '/orders'
     end
 
+    it 'saves the tangocard payload' do
+      HighfiveRecord.last.tango_payload.must_match /"ok":true/
+    end
+
     it 'posts to slack' do
       assert_requested :post, %r(https://example.com/slack_response/.*)
     end

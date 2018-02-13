@@ -22,6 +22,7 @@ class TangoCardJob < ApplicationJob
       recipient_profile&.first_name, recipient_profile&.last_name, recipient_profile&.email,
       @record.amount, @record.id, email_subject, email_message
     )
+    @record.tango_payload = resp.to_json
 
     if resp['errors']
       Rails.logger.error "Team #{slack_team.team_id} failed to send card: #{resp}"
