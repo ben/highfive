@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180129004249) do
+ActiveRecord::Schema.define(version: 20180213140852) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -39,6 +39,7 @@ ActiveRecord::Schema.define(version: 20180129004249) do
     t.string "slack_response_url"
     t.string "tango_reference_order_id"
     t.string "state"
+    t.string "tango_payload"
     t.index ["slack_team_id"], name: "index_highfive_records_on_slack_team_id"
   end
 
