@@ -1,5 +1,5 @@
 # config valid only for current version of Capistrano
-lock '3.10.1'
+lock '3.11'
 
 set :application, 'highfive'
 set :repo_url, 'https://github.com/ben/highfive'
