@@ -86,10 +86,9 @@ class SlackController < ApplicationController
   end
 
   def verify_slack_token
-    return if params[:token] == ENV['SLACK_VERIFICATION_TOKEN']
-    @json = JSON.parse(params[:payload] || '{}')
-    return if @json['token'] == ENV['SLACK_VERIFICATION_TOKEN']
-    head :unauthorized
+    @json = JSON.parse(params.fetch(:payload, '{}'))
+    token = params[:token] || @json['token']
+    head :unauthorized if token != ENV['SLACK_VERIFICATION_TOKEN']
   end
 
   def parse_command
