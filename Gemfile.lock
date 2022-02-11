@@ -179,7 +179,8 @@ GEM
       coderay (~> 1.1.0)
       method_source (~> 0.9.0)
     public_suffix (3.1.1)
-    puma (3.12.6)
+    puma (4.3.11)
+      nio4r (~> 2.0)
     racc (1.5.2)
     rack (2.2.3)
     rack-protection (2.0.2)
@@ -332,7 +333,7 @@ DEPENDENCIES
   mocha
   momentjs-rails
   pg (~> 0.18)
-  puma (~> 3.12)
+  puma (~> 4.3)
   rails (~> 5.1.0, >= 5.1.0.1)
   rb-readline
   redis-rails
