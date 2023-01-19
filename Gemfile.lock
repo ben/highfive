@@ -89,7 +89,7 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.12.2)
-    concurrent-ruby (1.1.5)
+    concurrent-ruby (1.1.10)
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
     crass (1.0.6)
@@ -108,8 +108,8 @@ GEM
       thor (~> 0.19.1)
     formatador (0.2.5)
     gli (2.18.1)
-    globalid (0.4.2)
-      activesupport (>= 4.2.0)
+    globalid (1.0.1)
+      activesupport (>= 5.0)
     guard (2.15.0)
       formatador (>= 0.2.4)
       listen (>= 2.7, < 4.0)
@@ -127,7 +127,7 @@ GEM
     hashdiff (1.0.0)
     hashie (3.6.0)
     htmlentities (4.3.4)
-    i18n (1.6.0)
+    i18n (1.12.0)
       concurrent-ruby (~> 1.0)
     jbuilder (2.9.1)
       activesupport (>= 4.2.0)
@@ -151,7 +151,7 @@ GEM
       rake
     mini_mime (1.0.2)
     mini_portile2 (2.6.1)
-    minitest (5.11.3)
+    minitest (5.15.0)
     minitest-spec-rails (5.5.0)
       minitest (~> 5.0)
       rails (>= 4.1)
